@@ -2164,14 +2164,14 @@
 
 						level_0 {
 							threshold = <0x320>;
-							mid_min = <0x163780>;
-							lit_min = <0x163780>;
+							mid_min = <1898000>;
+							lit_min = <1586000>;
 							int = <0x61a80>;
 						};
 
 						level_1 {
 							threshold = <0x460>;
-							mid_min = <0x1e8c50>;
+							mid_min = <2600000>;
 							lit_min = <0x1dc130>;
 							int = <0x82208>;
 						};
@@ -2201,7 +2201,7 @@
 							threshold = <0xc8>;
 							mid_min = <0x1cf610>;
 							lit_min = <0x1a94b0>;
-							mif = <0x14a140>;
+							mif = <2730000>;
 							int = <0x61a80>;
 							task_affinity = "enable";
 							irq_affinity = "enable";
@@ -2212,7 +2212,7 @@
 							threshold = <0x12c>;
 							mid_min = <0x202290>;
 							lit_min = <0x1a94b0>;
-							mif = <0x1a2f20>;
+							mif = <2730000>;
 							int = <0x82208>;
 							task_affinity = "enable";
 							irq_affinity = "enable";
@@ -2244,7 +2244,7 @@
 							threshold = <0xc8>;
 							mid_min = <0x19c990>;
 							lit_min = <0x13d620>;
-							mif = <0x14a140>;
+							mif = <2730000>;
 							int = <0x61a80>;
 							task_affinity = "enable";
 							irq_affinity = "enable";
@@ -2255,7 +2255,7 @@
 							threshold = <0x12c>;
 							mid_min = <0x1cf610>;
 							lit_min = <0x163780>;
-							mif = <0x1a2f20>;
+							mif = <2730000>;
 							int = <0x82208>;
 							task_affinity = "enable";
 							irq_affinity = "enable";
