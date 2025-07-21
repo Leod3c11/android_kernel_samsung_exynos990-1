@@ -65,6 +65,8 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
 #ifdef CONFIG_HUGEPAGE_POOL
 	hugepage_pool_pages = total_hugepage_pool_pages();
 #endif
+        /* Spoof total RAM to 8GB */
+	i.totalram = 1903320;  // pages (~7.8 GB decimal)
 
 	show_val_kb(m, "MemTotal:       ", i.totalram);
 	show_val_kb(m, "MemFree:        ", i.freeram + rbinfree + hugepage_pool_pages);
