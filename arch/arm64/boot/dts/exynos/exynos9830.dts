@@ -13872,11 +13872,9 @@
 
 	mali@18500000 {
 		compatible = "arm,mali";
-		reg = <0x0 0x18500000 0x5000>;
+		reg = <0x00 0x18500000 0x5000>;
 		sysreg_g3d = <0x18420000>;
-		interrupts = <GIC_SPI INTREQ__G3D_IRQJOB IRQ_TYPE_LEVEL_HIGH>,
-				   <GIC_SPI INTREQ__G3D_IRQMMU IRQ_TYPE_LEVEL_HIGH>,
-				   <GIC_SPI INTREQ__G3D_IRQGPU IRQ_TYPE_LEVEL_HIGH>;
+		interrupts = <0x00 0x12d 0x04 0x00 0x12e 0x04 0x00 0x12c 0x04>;
 		interrupt-names = "JOB", "MMU", "GPU";
 		g3d_cmu_cal_id = <ACPM_DVFS_G3D>;
 		power-domains = <&pd_embedded_g3d>;
