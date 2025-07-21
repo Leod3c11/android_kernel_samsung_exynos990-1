@@ -2700,6 +2700,15 @@ static int do_sysinfo(struct sysinfo *info)
 
 	si_meminfo(info);
 	si_swapinfo(info);
+	/*
+	* Spoof total RAM to 8GB (in pages)
+	*/
+	info->totalram = 1903320;  // pages (~7.8 GB decimal)
+	
+	/*
+	* Keep mem_unit consistent: bytes per unit
+	*/
+	info->mem_unit = PAGE_SIZE;
 
 	/*
 	 * If the sum of all the available memory (i.e. ram + swap)
