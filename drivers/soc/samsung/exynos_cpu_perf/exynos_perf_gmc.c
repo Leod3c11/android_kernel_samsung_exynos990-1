@@ -19,11 +19,11 @@
 #include <soc/samsung/cal-if.h>
 #include <soc/samsung/exynos-devfreq.h>
 #include <linux/pm_qos.h>
-#include <linux/ems.h>                    // ✅ HABILITADO
+//#include <linux/ems.h>                    // ✅ HABILITADO
 #include <linux/miscdevice.h>
 #include "../../../kernel/sched/sched.h"
 #include "../../../kernel/sched/ems/ems.h"
-#include "../../../kernel/sched/tune.h"   // ✅ HABILITADO
+//#include "../../../kernel/sched/tune.h"   // ✅ HABILITADO
 #include <linux/cpumask.h>
 #include <linux/kernel.h>
 
