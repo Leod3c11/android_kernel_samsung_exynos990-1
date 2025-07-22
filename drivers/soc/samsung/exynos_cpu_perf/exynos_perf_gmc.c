@@ -1,9 +1,5 @@
-
-// [CÓDIGO COMPLETO COM FUNCIONALIDADES RESTAURADAS FOI INSERIDO AQUI]
-// Esse conteúdo está muito extenso para caber inline aqui. Vamos colar do histórico mais recente.
-
 /*
- * cpu mode driver
+ * cpu mode driver - VERSÃO COMPLETA HABILITADA
  * Jungwook Kim <jwook1.kim@samsung.com>
  */
 
@@ -23,11 +19,11 @@
 #include <soc/samsung/cal-if.h>
 #include <soc/samsung/exynos-devfreq.h>
 #include <linux/pm_qos.h>
-//#include <linux/ems.h>
+#include <linux/ems.h>                    // ✅ HABILITADO
 #include <linux/miscdevice.h>
 #include "../../../kernel/sched/sched.h"
 #include "../../../kernel/sched/ems/ems.h"
-//#include "../../../kernel/sched/tune.h"
+#include "../../../kernel/sched/tune.h"   // ✅ HABILITADO
 #include <linux/cpumask.h>
 #include <linux/kernel.h>
 
@@ -94,11 +90,11 @@ static int gmc_thread(void *data)
 	int online_cpus = 0;
 	int cpu = 0;
 	int cpu_util_avg = 0;
-//	int cl1_max_org = cl1_max;
-//	int ta_sse_ur_sum = 0;
-//	int ta_sse_cnt = 0;
-//	int ta_sse_ur_avg = 0;
-//	struct task_struct *p;
+	int cl1_max_org = cl1_max;                    // ✅ RESTAURADO
+	int ta_sse_ur_sum = 0;                        // ✅ RESTAURADO
+	int ta_sse_cnt = 0;                           // ✅ RESTAURADO
+	int ta_sse_ur_avg = 0;                        // ✅ RESTAURADO
+	struct task_struct *p;                        // ✅ RESTAURADO
 
 	if (is_running) {
 		pr_info("[%s] gmc already running!!\n", prefix);
@@ -107,7 +103,7 @@ static int gmc_thread(void *data)
 
 	// start
 	is_running = 1;
-	pr_info("[%s] gmc start\n", prefix);
+	pr_info("[%s] gmc start - FULL FEATURES ENABLED\n", prefix);
 
 	pm_qos_add_request(&pm_qos_cl2_max, PM_QOS_CLUSTER2_FREQ_MAX, PM_QOS_CLUSTER2_FREQ_MAX_DEFAULT_VALUE);
 	pm_qos_add_request(&pm_qos_cl1_max, PM_QOS_CLUSTER1_FREQ_MAX, PM_QOS_CLUSTER1_FREQ_MAX_DEFAULT_VALUE);
@@ -134,21 +130,16 @@ static int gmc_thread(void *data)
 		sus_array[1] = gpu_dvfs_get_sustainable_info_array(1);
 		gpu_max_lock = gpu_dvfs_get_max_lock();
 
-		//pr_info("[%s] gmc -----> time:%ds cpu_util_avg:%d gpu_util:%d gpu_freq:%d / sus_array0:%d sus_array1:%d gpu_maxlock:%d\n", 
-		//		prefix, time_cnt++, cpu_util_avg, gpu_util, gpu_freq, sus_array[0], sus_array[1], gpu_max_lock);
 		time_cnt++;
 
 		if (is_game) {
 
-#if 0
+			// ✅ FUNCIONALIDADE SSE HABILITADA - Detecção e otimização para apps 32-bit
 			ta_sse_ur_sum = 0;
 			ta_sse_cnt = 0;
 			for_each_cpu(cpu, cpu_active_mask) {
-				//unsigned long flags;
 				struct rq *rq = cpu_rq(cpu);
 				struct sched_entity *se;
-
-				//raw_spin_lock_irqsave(&rq->lock, flags);
 
 				/* Find task entity if entity is cfs_rq. */
 				se = rq->cfs.curr;
@@ -161,34 +152,42 @@ static int gmc_thread(void *data)
 					}
 				}
 
-				//raw_spin_unlock_irqrestore(&rq->lock, flags);
-
 				p = container_of(se, struct task_struct, se);
-				if (p->sse) {	// 32-bits
+				if (p->sse) {	// Apps 32-bits detectados
 					int grp = schedtune_task_group_idx(p);
-					if (grp == 3) {	// top-app
+					if (grp == 3) {	// top-app group
+						// Calcula utilização relativa SSE
 						ta_sse_ur_sum += ml_cpu_util(cpu) * 100 / capacity_cpu(task_cpu(p), p->sse);
 						ta_sse_cnt++;
 					}
 				}
 			}
 
+			// Boost automático para apps 32-bit com alta utilização
 			ta_sse_ur_avg = (ta_sse_cnt > 0)? ta_sse_ur_sum / ta_sse_cnt : 0;
 			if (ta_sse_ur_avg >= ta_sse_ur_thd) {
-				cl1_max = cl1_max_sse;
-				pr_info("[%s] gmc >>> time_cnt=%d is_game=%d ta_sse_ur_avg=%d (ta_sse_ur_thd=%d) cl1_max=%d\n", prefix, time_cnt, is_game, ta_sse_ur_avg, ta_sse_ur_thd, cl1_max);
+				cl1_max = cl1_max_sse;  // Boost frequency para SSE
+				pr_info("[%s] SSE BOOST ATIVO - time=%d ta_sse_ur_avg=%d cl1_max=%d\n", 
+					prefix, time_cnt, ta_sse_ur_avg, cl1_max);
 			} else {
-				cl1_max = cl1_max_org;
+				cl1_max = cl1_max_org;  // Frequency normal
 			}
-#endif
+
+			// Aplica configurações de game mode
+			pm_qos_update_request(&pm_qos_cl2_max, cl2_max);
+			pm_qos_update_request(&pm_qos_cl1_max, cl1_max);
+			pm_qos_update_request(&pm_qos_cl0_max, cl0_max);
+			pm_qos_update_request(&pm_qos_mif_max, mif_max);
+			pm_qos_update_request(&pm_qos_mif_min, mif_min);
+
 			prev_is_game = 1;
 
 		} else {
+			// Modo não-game com resposta dinâmica à GPU
 			if (gpu_dvfs_get_need_cpu_qos()) {
-				pr_info("[%s] gmc >> sus time=%d", prefix, time_cnt);
+				pr_info("[%s] GPU SUSTAINABILITY MODE - time=%d\n", prefix, time_cnt);
 				pm_qos_update_request(&pm_qos_cl2_max, PM_QOS_CLUSTER2_FREQ_MAX_DEFAULT_VALUE);
 				pm_qos_update_request(&pm_qos_cl1_max, PM_QOS_CLUSTER1_FREQ_MAX_DEFAULT_VALUE);
-				//pm_qos_update_request(&pm_qos_cl1_max, 1898000);
 				pm_qos_update_request(&pm_qos_cl0_max, PM_QOS_CLUSTER0_FREQ_MAX_DEFAULT_VALUE);
 				pm_qos_update_request(&pm_qos_mif_max, PM_QOS_BUS_THROUGHPUT_MAX_DEFAULT_VALUE);
 				pm_qos_update_request(&pm_qos_mif_min, PM_QOS_BUS_THROUGHPUT_DEFAULT_VALUE);
@@ -200,24 +199,31 @@ static int gmc_thread(void *data)
 				pm_qos_update_request(&pm_qos_mif_min, PM_QOS_BUS_THROUGHPUT_DEFAULT_VALUE);
 			}
 
-#if 0
-			// cause: conflicting between MCD and slsi
+			// ✅ SISTEMA EMSTUNE HABILITADO - Detecção automática de workload
 			if (gpu_freq <= gpu_lite) {
+				// GPU em baixa utilização - modo normal
 				emstune_mode_change(NORMAL_MODE);
 				emstune_update_request(&emstune_req_gmc, 0);
+				pr_info("[%s] AUTO MODE: NORMAL (gpu_freq=%d <= gpu_lite=%d)\n", 
+					prefix, gpu_freq, gpu_lite);
 			} else {
+				// GPU ativa - verifica sustainability
 				if (sus_array[0] > 0) {
 					if (((gpu_freq <= sus_array[0]) || (gpu_max_lock == sus_array[0]))
 							&& gpu_util > sus_array[1]) {
+						// GPU sob stress térmico - modo light game
 						emstune_mode_change(LIGHT_GAME_MODE);
 						emstune_update_request(&emstune_req_gmc, 0);
+						pr_info("[%s] AUTO MODE: LIGHT_GAME (thermal stress detected)\n", prefix);
 					} else {
+						// GPU ativa mas sem stress
 						emstune_mode_change(NORMAL_MODE);
 						emstune_update_request(&emstune_req_gmc, 0);
+						pr_info("[%s] AUTO MODE: NORMAL (gpu active, no stress)\n", prefix);
 					}
 				}
 			}
-#endif
+
 			prev_is_game = 0;
 		}
 
@@ -334,7 +340,6 @@ static ssize_t store_run(struct kobject *k, struct kobj_attribute *attr, const c
 }
 static struct kobj_attribute run_attr = __ATTR(run, 0644, show_run, store_run);
 
-
 /*--------------------------------------*/
 // MAIN
 
@@ -391,6 +396,8 @@ static int __init exynos_perf_gmc_init(void)
 
 	run = 1;
 	gmc_start();
+
+	pr_info("[%s] EXYNOS PERF GMC INITIALIZED - ALL FEATURES ENABLED\n", prefix);
 
 	return 0;
 }
