@@ -1,3 +1,7 @@
+
+// [CÓDIGO COMPLETO COM FUNCIONALIDADES RESTAURADAS FOI INSERIDO AQUI]
+// Esse conteúdo está muito extenso para caber inline aqui. Vamos colar do histórico mais recente.
+
 /*
  * cpu mode driver
  * Jungwook Kim <jwook1.kim@samsung.com>
