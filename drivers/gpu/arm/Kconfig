@@ -24,7 +24,7 @@ menuconfig MALI_DDK_VERSION
 choice
 	prompt "version Configuration"
 	depends on MALI_DDK_VERSION
-	default MALI_DDK_VALHALL_R38P1
+	default MALI_DDK_VALHALL_R25P1
 	help
 	  Select the gpu support version.
 
