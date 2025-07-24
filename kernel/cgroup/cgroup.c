@@ -2822,6 +2822,8 @@ struct task_struct *cgroup_procs_write_start(char *buf, bool threadgroup)
 		goto out_unlock_threadgroup;
 	}
 
+struct cgroup *cgrp = css->cgroup;
+int ret = 0;
 	/* Check if the task is a game */
 	if (!memcmp(cgrp->kn->name, "top-app", sizeof("top-app")) && !ret) {
 		game_option(tsk, GAME_RUNNING);
