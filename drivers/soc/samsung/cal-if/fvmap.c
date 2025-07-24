@@ -729,11 +729,13 @@ static void fvmap_copy_from_sram(void __iomem *map_base, void __iomem *sram_base
 			}
 
 			if (strcmp(vclk->name, "dvfs_g3d") == 0) {
-				if (old->table[j].rate = 832000)
-					old->table[j].rate = 845000;
-				if (old->table[j].rate == 897000)
-					old->table[j].rate = 927000;
-			}
+                               if (old->table[j].rate == 832000) {
+                                       old->table[j].rate = 845000;
+                                       old->table[j].volt = 760000;  // ajuste baseado no seu perfil
+                        } else if (old->table[j].rate == 897000) {
+                                       old->table[j].rate = 927000;
+                                       old->table[j].volt = 785000;  // como estimado anteriormente
+                        }
 			new->table[j].rate = old->table[j].rate;
 			new->table[j].volt = old->table[j].volt;
 			pr_info("  lv : [%7d], volt = %d uV (%d %%) \n",
