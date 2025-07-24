@@ -31,8 +31,6 @@
 #include <gpexbe_utilization.h>
 #include <gpexbe_debug.h>
 
-#include <linux/gaming_control.h>
-
 #include "gpex_clock_internal.h"
 
 #define CPU_MAX INT_MAX
