@@ -30,7 +30,7 @@
 
 #include "gpex_clock_internal.h"
 
-#define GPU_DVFS_TYPE		4
+#define GPU_DVFS_TYPE		5
 
 static struct _clock_info *clk_info;
 static struct regulator *g3d_regulator;
