@@ -523,8 +523,7 @@ int gpex_clock_sysfs_init(struct _clock_info *_clk_info)
 	GPEX_UTILS_SYSFS_DEVICE_FILE_ADD(dvfs_min_lock, show_min_lock_dvfs, set_min_lock_dvfs);
 	GPEX_UTILS_SYSFS_DEVICE_FILE_ADD_RO(dvfs_max_lock_status, show_max_lock_status);
 	GPEX_UTILS_SYSFS_DEVICE_FILE_ADD_RO(dvfs_min_lock_status, show_min_lock_status);
-
-GPEX_UTILS_SYSFS_DEVICE_FILE_ADD(unlock_freqs, show_unlock_freqs, set_unlock_freqs);
+        GPEX_UTILS_SYSFS_DEVICE_FILE_ADD(unlock_freqs, show_unlock_freqs, set_unlock_freqs);
 
 	GPEX_UTILS_SYSFS_KOBJECT_FILE_ADD(gpu_max_clock, show_max_lock_dvfs_kobj,
 					  set_max_lock_dvfs);
