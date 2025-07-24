@@ -62,6 +62,9 @@
 #define CREATE_TRACE_POINTS
 #include <trace/events/cgroup.h>
 
+/* Gaming control */
+#include <linux/gaming_control.h>
+
 #define CGROUP_FILE_NAME_MAX		(MAX_CGROUP_TYPE_NAMELEN +	\
 					 MAX_CFTYPE_NAME + 2)
 /* let's not notify more than 100 times per second */
@@ -2817,6 +2820,13 @@ struct task_struct *cgroup_procs_write_start(char *buf, bool threadgroup)
 	if (tsk->no_cgroup_migration || (tsk->flags & PF_NO_SETAFFINITY)) {
 		tsk = ERR_PTR(-EINVAL);
 		goto out_unlock_threadgroup;
+	}
+
+	/* Check if the task is a game */
+	if (!memcmp(cgrp->kn->name, "top-app", sizeof("top-app")) && !ret) {
+		game_option(tsk, GAME_RUNNING);
+	} else if (!memcmp(cgrp->kn->name, "background", sizeof("background")) && !ret) {
+		game_option(tsk, GAME_PAUSE);
 	}
 
 	get_task_struct(tsk);
