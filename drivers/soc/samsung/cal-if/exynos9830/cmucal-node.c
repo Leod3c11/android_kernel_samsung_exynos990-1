@@ -52,6 +52,7 @@ struct cmucal_pll_table pll_shared0_rate_table[] = {
 };
 
 struct cmucal_pll_table pll_g3d_rate_table[] = {
+	PLL_RATE_MPS(927000000, 464, 13, 0),
 	PLL_RATE_MPS(900000000, 450, 13, 0),
 	PLL_RATE_MPS(750000000, 375, 13, 0),
 	PLL_RATE_MPS(450000000, 450, 13, 1),
@@ -72,6 +73,7 @@ struct cmucal_pll_table pll_cpucl0_rate_table[] = {
 };
 
 struct cmucal_pll_table pll_cpucl1_rate_table[] = {
+	PLL_RATE_MPS(2730000000, 387, 4, 0),
 	PLL_RATE_MPS(2600000000, 369, 4, 0),
 	PLL_RATE_MPS(1950000000, 225, 3, 0),
 	PLL_RATE_MPS(1550000000, 298, 5, 0),
