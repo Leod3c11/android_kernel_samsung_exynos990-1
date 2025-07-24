@@ -68,7 +68,7 @@ static int ect_parse_string(void **address, char **value, unsigned int *length)
 static int ect_parse_dvfs_domain(int parser_version, void *address, struct ect_dvfs_domain *domain)
 {
 	int ret = 0;
-	int i;
+	int i, j;
 	char *clock_name;
 	int length;
 
@@ -119,6 +119,25 @@ static int ect_parse_dvfs_domain(int parser_version, void *address, struct ect_d
 	address += sizeof(struct ect_dvfs_level) * domain->num_of_level;
 
 	domain->list_dvfs_value = address;
+
+	for (j = 0; j < domain->num_of_level; ++j) {
+			if (ect_strcmp(domain->domain_name, "dvfs_cpucl1") == 0) {
+			if (domain->list_level[j].level == 2600000)
+				domain->list_level[j].level = 2730000;
+			if (domain->list_level[j].level == 2504000)
+				domain->list_level[j].level = 2604000;
+		} else if (ect_strcmp(domain->domain_name, "dvfs_cpucl0") == 0) {
+			if (domain->list_level[j].level == 2002000)
+				domain->list_level[j].level = 2106000;
+			if (domain->list_level[j].level == 1950000)
+				domain->list_level[j].level = 2002000;
+		} else if (ect_strcmp(domain->domain_name, "dvfs_g3d") == 0) {
+			if (domain->list_level[j].level == 832000)
+				domain->list_level[j].level = 845000;
+			if (domain->list_level[j].level == 897000)
+				domain->list_level[j].level = 927000;
+		}
+	}
 
 	return 0;
 
@@ -194,10 +213,34 @@ err_domain_list_allocation:
 
 static int ect_parse_pll(int parser_version, void *address, struct ect_pll *ect_pll)
 {
+	struct ect_pll_frequency *frequency;
+	int j;
+
 	ect_parse_integer(&address, &ect_pll->type_pll);
 	ect_parse_integer(&address, &ect_pll->num_of_frequency);
 
 	ect_pll->frequency_list = address;
+
+	for (j = 0; j < ect_pll->num_of_frequency; ++j) {
+		frequency = &ect_pll->frequency_list[j];
+		
+		if (ect_strcmp(ect_pll->pll_name, "PLL_CPUCL1") == 0) {
+			if (frequency->frequency == 2600000000)
+				frequency->frequency = 2730000000;
+			if (frequency->frequency == 2504000000)
+				frequency->frequency = 2604000000;
+		} else if (ect_strcmp(ect_pll->pll_name, "PLL_CPUCL0") == 0) {
+			if (frequency->frequency == 2002000000)
+				frequency->frequency = 2106000000;
+			if (frequency->frequency == 1950000000)
+				frequency->frequency = 2002000000;
+		} else if (ect_strcmp(ect_pll->pll_name, "PLL_G3D") == 0) {
+			if (frequency->frequency == 832000000)
+				frequency->frequency = 845000000;
+			if (frequency->frequency == 897000000)
+				frequency->frequency = 927000000;
+		}
+	}
 
 	return 0;
 }
@@ -309,7 +352,7 @@ static int ect_parse_voltage_table(int parser_version, void **address, struct ec
 static int ect_parse_voltage_domain(int parser_version, void *address, struct ect_voltage_domain *domain)
 {
 	int ret = 0;
-	int i;
+	int i, j;
 
 	ect_parse_integer(&address, &domain->num_of_group);
 	ect_parse_integer(&address, &domain->num_of_level);
@@ -331,6 +374,25 @@ static int ect_parse_voltage_domain(int parser_version, void *address, struct ec
 						&domain->table_list[i])) {
 			ret = -EINVAL;
 			goto err_parse_voltage_table;
+		}
+	}
+
+	for (j = 0; j < domain->num_of_level; ++j) {
+		if (ect_strcmp(domain->domain_name, "dvfs_cpucl1") == 0) {
+			if (domain->level_list[j] == 2600)
+				domain->level_list[j] = 2730;
+			if (domain->level_list[j] == 2504)
+				domain->level_list[j] = 2604;
+		} else if (ect_strcmp(domain->domain_name, "dvfs_cpucl0") == 0) {
+			if (domain->level_list[j] == 2002)
+				domain->level_list[j] = 2106;
+			if (domain->level_list[j] == 1950)
+				domain->level_list[j] = 2002;
+		} else if (ect_strcmp(domain->domain_name, "dvfs_g3d") == 0) {
+			if (domain->level_list[j] == 832)
+				domain->level_list[j] = 845;
+			if (domain->level_list[j] == 897)
+				domain->level_list[j] = 927;
 		}
 	}
 
@@ -787,9 +849,30 @@ err_size_list_allocation:
 
 static int ect_parse_minlock_domain(int parser_version, void *address, struct ect_minlock_domain *domain)
 {
+	int j;
+
 	ect_parse_integer(&address, &domain->num_of_level);
 
 	domain->level = address;
+
+	for (j = 0; j < domain->num_of_level; ++j) {
+		if (ect_strcmp(domain->domain_name, "dvfs_cpucl1") == 0) {
+			if (domain->level[j].main_frequencies == 2600000)
+				domain->level[j].main_frequencies = 2730000;
+			if (domain->level[j].main_frequencies == 2504000)
+				domain->level[j].main_frequencies = 2604000;
+		} else if (ect_strcmp(domain->domain_name, "dvfs_cpucl0") == 0) {
+			if (domain->level[j].main_frequencies == 2002000)
+				domain->level[j].main_frequencies = 2106000;
+			if (domain->level[j].main_frequencies == 1950000)
+				domain->level[j].main_frequencies = 2002000;
+		} else if (ect_strcmp(domain->domain_name, "dvfs_g3d") == 0) {
+			if (domain->level[j].main_frequencies == 832000)
+				domain->level[j].main_frequencies = 845000;
+			if (domain->level[j].main_frequencies == 897000)
+				domain->level[j].main_frequencies = 927000;
+		}
+	}
 
 	return 0;
 }
