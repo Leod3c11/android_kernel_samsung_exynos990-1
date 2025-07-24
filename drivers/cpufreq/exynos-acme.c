@@ -1593,8 +1593,8 @@ static int __init cpufreq_read_cpu_max_c1(char *cpu_max_c1) /*integer remains in
 }
 __setup("cpu_max_c1=", cpufreq_read_cpu_max_c1);
 
-/*Overclocking perf cores to 2600 MHz*/
-unsigned long arg_cpu_max_c2 = 2600000; /*max_cpu_freq=2600 MHz*/
+/*Overclocking perf cores to 2730 MHz*/
+unsigned long arg_cpu_max_c2 = 2730000; /*max_cpu_freq=2730 MHz*/
 
 static __init int cpufreq_read_cpu_max_c2(char *cpu_max_c2)
 {
