@@ -22,6 +22,9 @@
 #include "mali_kbase_platform.h"
 #include "gpu_dvfs_handler.h"
 
+/* Gaming control */
+#include <linux/gaming_control.h>
+
 #if defined(PM_QOS_CLUSTER2_FREQ_MAX_DEFAULT_VALUE)
 #define PM_QOS_CPU_CLUSTER_NUM 3
 #else
@@ -244,10 +247,10 @@ int gpu_pm_qos_command(struct exynos_context *platform, gpu_pmqos_state state)
 		if (platform->sustainable.info_array[0] > 0) {
 			if (((platform->cur_clock <= platform->sustainable.info_array[0])
 						|| (platform->max_lock == platform->sustainable.info_array[0]))
-					&& platform->env_data.utilization > platform->sustainable.info_array[1]) {
+					&& platform->env_data.utilization > platform->sustainable.info_array[1] && !gaming_mode) {
 				platform->sustainable.status = true;
 				if (platform->sustainable.info_array[2] != 0)
-					pm_qos_update_request(&exynos5_g3d_cpu_cluster0_max_qos, platform->sustainable.info_array[2]);
+					pm_qos_update_request(&exynos5_g3d_cpu_cluster0_max_qos, platform->sustainable.info_array[2] && !gaming_mode);
 				if (platform->sustainable.info_array[3] != 0)
 					pm_qos_update_request(&exynos5_g3d_cpu_cluster1_max_qos, platform->sustainable.info_array[3]);
 				if (platform->sustainable.info_array[4] != 0)
