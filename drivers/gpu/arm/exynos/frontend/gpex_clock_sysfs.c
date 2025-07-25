@@ -488,7 +488,7 @@ CREATE_SYSFS_KOBJECT_READ_FUNCTION(show_gpu_freq_table)
 
 GPEX_STATIC ssize_t set_asv_table(const char *buf, size_t count)
 {
-	int id = 4; /* dvfs_g3d */
+	int id = 5; /* dvfs_g3d */
 	unsigned int rate, volt;
 
 	if (sscanf(buf, "%u %u", &rate, &volt) == 2) {
