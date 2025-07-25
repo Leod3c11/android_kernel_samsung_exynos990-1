@@ -718,7 +718,7 @@ static void fvmap_copy_from_sram(void __iomem *map_base, void __iomem *sram_base
 				if (old->table[j].rate == 2600000)
 					old->table[j].rate = 2730000;
 				if (old->table[j].rate == 2504000)
-					old->table[j].rate = 2632000;
+					old->table[j].rate = 2604000;
 			}
 
 			if (strcmp(vclk->name, "dvfs_cpucl0") == 0) {
@@ -729,7 +729,7 @@ static void fvmap_copy_from_sram(void __iomem *map_base, void __iomem *sram_base
 			}
 
 			if (strcmp(vclk->name, "dvfs_g3d") == 0) {
-				if (old->table[j].rate == 800000)
+				if (old->table[j].rate == 832000)
 					old->table[j].rate = 845000;
 				if (old->table[j].rate == 897000)
 					old->table[j].rate = 927000;
