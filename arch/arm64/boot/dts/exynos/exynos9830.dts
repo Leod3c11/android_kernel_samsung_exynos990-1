@@ -129,16 +129,16 @@
 				core0 {
 					cpu = <&cpu4>;
 				};
+				core1 {
+					cpu = <&cpu5>;
+				};
 			};
 
 			cluster2 {
 				core0 {
-					cpu = <&cpu5>;
-				};
-				core1 {
 					cpu = <&cpu6>;
 				};
-				core2 {
+				core1 {
 					cpu = <&cpu7>;
 				};
 			};
@@ -388,12 +388,12 @@
 				ratio-table = <100>;
 			};
 			ENYO_FREQ_FACTOR: enyo-freq-factor {
-				sibling-cpus = "4";
+				sibling-cpus = "4-5";
 				type = <FREQ_FACTOR>;
 				ratio-table = <100>;
 			};
 			LION_FREQ_FACTOR: lion-freq-factor {
-				sibling-cpus = "5-7";
+				sibling-cpus = "6-7";
 				type = <FREQ_FACTOR>;
 				ratio-table = <100>;
 			};
@@ -440,11 +440,11 @@
 		};
 		ucc-config1 {
 			index = <1>;
-			cstate = "5-7";
+			cstate = "6-7";
 		};
 		ucc-config2 {
 			index = <2>;
-			cstate = "5-7";
+			cstate = "6-7";
 		};
 		ucc-config3 {
 			index = <3>;
@@ -477,14 +477,14 @@
 		};
 		domain@1 {
 			device_type = "ufc_domain";
-			shared-cpus = "4";
+			shared-cpus = "4-5";
 			table-idx = <2>;	/* index to ref ufc-table */
 			pm_qos-min-class = <5>;
 			pm_qos-max-class = <6>;
 		};
 		domain@2 {
 			device_type = "ufc_domain";
-			shared-cpus = "5-7";
+			shared-cpus = "6-7";
 			table-idx = <1>;	/* index to ref ufc-table */
 			pm_qos-min-class = <7>;
 			pm_qos-max-class = <8>;
@@ -707,7 +707,7 @@
 		};
 		domain@1 {
 			device_type = "esgov-pol4";
-			shared-cpus = "4";
+			shared-cpus = "4-5";
 			pm_qos-min-class = <5>;
 			pm_qos-max-class = <6>;
 			step = <8>;
@@ -715,7 +715,7 @@
 		};
 		domain@2 {
 			device_type = "esgov-pol6";
-			shared-cpus = "5-7";
+			shared-cpus = "6-7";
 			pm_qos-min-class = <7>;
 			pm_qos-max-class = <8>;
 			step = <10>;
@@ -734,7 +734,7 @@
 
 		schedutil_domain1: domain@1 {
 			device_type = "schedutil-domain";
-			shared-cpus = "4";
+			shared-cpus = "4-5";
 
 			enabled = <1>;          /* Enabled */
 			expired_time = <80>;    /* 80ms */
@@ -796,7 +796,7 @@
 
 		cpufreq_domain1: domain@1 {
 			device_type = "cpufreq-domain";
-			sibling-cpus = "4";
+			sibling-cpus = "4-5";
 			cal-id = <ACPM_DVFS_CPUCL1>;
 			dm-type = <DM_CPU_CL1>;
 
@@ -859,7 +859,7 @@
 
 		cpufreq_domain2: domain@2 {
 			device_type = "cpufreq-domain";
-			sibling-cpus = "5-7";
+			sibling-cpus = "6-7";
 			cal-id = <ACPM_DVFS_CPUCL2>;
 			dm-type = <DM_CPU_CL2>;
 			need-awake;
@@ -938,7 +938,7 @@
 		bl2-inc = <0>;
 		bl3-inc = <0>;
 		operation-mode = <0>;
-		sibling-cpus = "5-7";
+		sibling-cpus = "6-7";
 				/* PB  BL  PBL  PWR_THR_INC */
 		config-table = <0x0 0x0 0xff 0x0        /* config A */
 				0x1 0x2 0xff 0x0        /* config B */
@@ -955,7 +955,7 @@
 
 		interrupts = <GIC_SPI INTREQ__CPUCL2_GCUIRQ IRQ_TYPE_LEVEL_HIGH>;
 
-		sibling-cpus = "5-7";
+		sibling-cpus = "6-7";
 		down-step = <1>;
 
 		max-freq-wo-ocp = <2730000>;
@@ -970,8 +970,8 @@
 		status = "okay";
 
 		#define CPU_CL0 "0-3"
-		#define CPU_CL1 "4"
-		#define CPU_CL2 "5-7"
+		#define CPU_CL1 "4-5"
+		#define CPU_CL2 "6-7"
 
 		cpu_domain0: domain@0 {
 			/* necessary data */
@@ -1479,8 +1479,8 @@
 			target-residency = <5000>;
 			psci-index = <128>;
 			type = <POWERMODE_TYPE_CLUSTER>;
-			siblings = "4";
-			entry-allowed = "4";
+			siblings = "4-5";
+			entry-allowed = "4-5";
 		};
 
 		cpd_cl2 {
@@ -1488,16 +1488,16 @@
 			target-residency = <5000>;
 			psci-index = <128>;
 			type = <POWERMODE_TYPE_CLUSTER>;
-			siblings = "5-7";
-			entry-allowed = "5-7";
+			siblings = "6-7";
+			entry-allowed = "6-7";
 			sicd-block;
 		};
 
 		vcpu_topology {
 			vcluster_cnt = <3>;
 			vcluster0_sibling = "0-3";
-			vcluster1_sibling = "4";
-			vcluster2_sibling = "5-7";
+			vcluster1_sibling = "4-5";
+			vcluster2_sibling = "6-7";
 		};
 
 		sicd {
@@ -1506,7 +1506,7 @@
 			psci-index = <256>;
 			type = <POWERMODE_TYPE_SYSTEM>;
 			siblings = "0-7";
-			entry-allowed = "0-4";
+			entry-allowed = "0-5";
 			system-idle;
 		};
 
