@@ -17,14 +17,23 @@
 
 #define ARRAY_SIZE32(array)		((u32)ARRAY_SIZE(array))
 
+extern unsigned long arg_cpu_max_c1;
+extern unsigned long arg_cpu_min_c1;
+extern unsigned long arg_cpu_max_c2;
+extern unsigned long arg_cpu_min_c2;
+extern unsigned long arg_gpu_min;
+extern unsigned long arg_gpu_max;
+extern unsigned long arg_mif_min;
+extern unsigned long arg_mif_max;
+
 /* Variable */
 
 static struct ect_info ect_list[];
 
 static char ect_signature[] = "PARA";
-
+#ifdef CONFIG_ECT_DUMP
 static struct class *ect_class;
-
+#endif
 static phys_addr_t ect_address;
 static phys_addr_t ect_size;
 
@@ -68,7 +77,7 @@ static int ect_parse_string(void **address, char **value, unsigned int *length)
 static int ect_parse_dvfs_domain(int parser_version, void *address, struct ect_dvfs_domain *domain)
 {
 	int ret = 0;
-	int i, j;
+	int i;
 	char *clock_name;
 	int length;
 
@@ -119,25 +128,6 @@ static int ect_parse_dvfs_domain(int parser_version, void *address, struct ect_d
 	address += sizeof(struct ect_dvfs_level) * domain->num_of_level;
 
 	domain->list_dvfs_value = address;
-
-	for (j = 0; j < domain->num_of_level; ++j) {
-			if (ect_strcmp(domain->domain_name, "dvfs_cpucl1") == 0) {
-			if (domain->list_level[j].level == 2600000)
-				domain->list_level[j].level = 2730000;
-			if (domain->list_level[j].level == 2504000)
-				domain->list_level[j].level = 2604000;
-		} else if (ect_strcmp(domain->domain_name, "dvfs_cpucl0") == 0) {
-			if (domain->list_level[j].level == 2002000)
-				domain->list_level[j].level = 2106000;
-			if (domain->list_level[j].level == 1950000)
-				domain->list_level[j].level = 2002000;
-		} else if (ect_strcmp(domain->domain_name, "dvfs_g3d") == 0) {
-			if (domain->list_level[j].level == 832000)
-				domain->list_level[j].level = 845000;
-			if (domain->list_level[j].level == 897000)
-				domain->list_level[j].level = 927000;
-		}
-	}
 
 	return 0;
 
@@ -213,34 +203,10 @@ err_domain_list_allocation:
 
 static int ect_parse_pll(int parser_version, void *address, struct ect_pll *ect_pll)
 {
-	struct ect_pll_frequency *frequency;
-	int j;
-
 	ect_parse_integer(&address, &ect_pll->type_pll);
 	ect_parse_integer(&address, &ect_pll->num_of_frequency);
 
 	ect_pll->frequency_list = address;
-
-	for (j = 0; j < ect_pll->num_of_frequency; ++j) {
-		frequency = &ect_pll->frequency_list[j];
-		
-		if (ect_strcmp(ect_pll->pll_name, "PLL_CPUCL1") == 0) {
-			if (frequency->frequency == 2600000000)
-				frequency->frequency = 2730000000;
-			if (frequency->frequency == 2504000000)
-				frequency->frequency = 2604000000;
-		} else if (ect_strcmp(ect_pll->pll_name, "PLL_CPUCL0") == 0) {
-			if (frequency->frequency == 2002000000)
-				frequency->frequency = 2106000000;
-			if (frequency->frequency == 1950000000)
-				frequency->frequency = 2002000000;
-		} else if (ect_strcmp(ect_pll->pll_name, "PLL_G3D") == 0) {
-			if (frequency->frequency == 832000000)
-				frequency->frequency = 845000000;
-			if (frequency->frequency == 897000000)
-				frequency->frequency = 927000000;
-		}
-	}
 
 	return 0;
 }
@@ -352,7 +318,7 @@ static int ect_parse_voltage_table(int parser_version, void **address, struct ec
 static int ect_parse_voltage_domain(int parser_version, void *address, struct ect_voltage_domain *domain)
 {
 	int ret = 0;
-	int i, j;
+	int i;
 
 	ect_parse_integer(&address, &domain->num_of_group);
 	ect_parse_integer(&address, &domain->num_of_level);
@@ -374,25 +340,6 @@ static int ect_parse_voltage_domain(int parser_version, void *address, struct ec
 						&domain->table_list[i])) {
 			ret = -EINVAL;
 			goto err_parse_voltage_table;
-		}
-	}
-
-	for (j = 0; j < domain->num_of_level; ++j) {
-		if (ect_strcmp(domain->domain_name, "dvfs_cpucl1") == 0) {
-			if (domain->level_list[j] == 2600)
-				domain->level_list[j] = 2730;
-			if (domain->level_list[j] == 2504)
-				domain->level_list[j] = 2604;
-		} else if (ect_strcmp(domain->domain_name, "dvfs_cpucl0") == 0) {
-			if (domain->level_list[j] == 2002)
-				domain->level_list[j] = 2106;
-			if (domain->level_list[j] == 1950)
-				domain->level_list[j] = 2002;
-		} else if (ect_strcmp(domain->domain_name, "dvfs_g3d") == 0) {
-			if (domain->level_list[j] == 832)
-				domain->level_list[j] = 845;
-			if (domain->level_list[j] == 897)
-				domain->level_list[j] = 927;
 		}
 	}
 
@@ -849,30 +796,9 @@ err_size_list_allocation:
 
 static int ect_parse_minlock_domain(int parser_version, void *address, struct ect_minlock_domain *domain)
 {
-	int j;
-
 	ect_parse_integer(&address, &domain->num_of_level);
 
 	domain->level = address;
-
-	for (j = 0; j < domain->num_of_level; ++j) {
-		if (ect_strcmp(domain->domain_name, "dvfs_cpucl1") == 0) {
-			if (domain->level[j].main_frequencies == 2600000)
-				domain->level[j].main_frequencies = 2730000;
-			if (domain->level[j].main_frequencies == 2504000)
-				domain->level[j].main_frequencies = 2604000;
-		} else if (ect_strcmp(domain->domain_name, "dvfs_cpucl0") == 0) {
-			if (domain->level[j].main_frequencies == 2002000)
-				domain->level[j].main_frequencies = 2106000;
-			if (domain->level[j].main_frequencies == 1950000)
-				domain->level[j].main_frequencies = 2002000;
-		} else if (ect_strcmp(domain->domain_name, "dvfs_g3d") == 0) {
-			if (domain->level[j].main_frequencies == 832000)
-				domain->level[j].main_frequencies = 845000;
-			if (domain->level[j].main_frequencies == 897000)
-				domain->level[j].main_frequencies = 927000;
-		}
-	}
 
 	return 0;
 }
@@ -941,12 +867,50 @@ err_domain_list_allocation:
 	return ret;
 }
 
+#define GLOBAL_MHZ 3172
+#define GPU_MHZ 927
+
 static int ect_parse_gen_param_table(int parser_version, void *address, struct ect_gen_param_table *size)
 {
+	int i;
 	ect_parse_integer(&address, &size->num_of_col);
 	ect_parse_integer(&address, &size->num_of_row);
 
 	size->parameter = address;
+
+	for (i = 0; i < size->num_of_row; ++i) {
+		int max_clock;
+
+		if (ect_strcmp(size->table_name, "MINMAX_dvfs_cpucl0") == 0) {
+			max_clock = arg_cpu_max_c1 / 1000;
+			size->parameter[i * size->num_of_col + MINMAX_MIN_FREQ] = arg_cpu_min_c1 / 1000;
+			size->parameter[i * size->num_of_col + MINMAX_MAX_FREQ] = max_clock;
+			if (GLOBAL_MHZ < max_clock)
+				max_clock = GLOBAL_MHZ;
+			size->parameter[i * size->num_of_col + MINMAX_BOOT_FREQ] = max_clock;
+		} else if (ect_strcmp(size->table_name, "MINMAX_dvfs_cpucl1") == 0) {
+			max_clock = arg_cpu_max_c2 / 1000;
+			size->parameter[i * size->num_of_col + MINMAX_MIN_FREQ] = arg_cpu_min_c2 / 1000;
+			size->parameter[i * size->num_of_col + MINMAX_MAX_FREQ] = max_clock;
+			if (GLOBAL_MHZ < max_clock)
+				max_clock = GLOBAL_MHZ;
+			size->parameter[i * size->num_of_col + MINMAX_BOOT_FREQ] = max_clock;
+		} else if (ect_strcmp(size->table_name, "MINMAX_dvfs_mif") == 0) {
+			max_clock = arg_mif_max / 1000;
+			size->parameter[i * size->num_of_col + MINMAX_MIN_FREQ] = arg_mif_min / 1000;
+			size->parameter[i * size->num_of_col + MINMAX_MAX_FREQ] = max_clock;
+			if (GLOBAL_MHZ < max_clock)
+				max_clock = GLOBAL_MHZ;
+			size->parameter[i * size->num_of_col + MINMAX_BOOT_FREQ] = max_clock;
+		} else if (ect_strcmp(size->table_name, "MINMAX_dvfs_g3d") == 0) {
+			max_clock = arg_gpu_max / 1000;
+			size->parameter[i * size->num_of_col + MINMAX_MIN_FREQ] = arg_gpu_min / 1000;
+			size->parameter[i * size->num_of_col + MINMAX_MAX_FREQ] = max_clock;
+			if (GPU_MHZ < max_clock)
+				max_clock = GPU_MHZ;
+			size->parameter[i * size->num_of_col + MINMAX_BOOT_FREQ] = max_clock;
+		}
+	}
 
 	return 0;
 }
