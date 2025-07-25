@@ -226,19 +226,19 @@
 		};
 		cpu5: cpu@0005 {
 			device_type = "cpu";
-			compatible = "arm,lion", "arm,armv8";
+			compatible = "arm,enyo", "arm,armv8";
 			reg = <0x0 0x0005>;
 			enable-method = "psci";
-			cpu-idle-states = <&LION_CPU_SLEEP>;
-			sched-energy-data = <&LION_ENERGY>;
+			cpu-idle-states = <&ENYO_CPU_SLEEP>;
+			sched-energy-data = <&ENYO_ENERGY>;
 			i-cache-size = <0x10000>;	/* 64KB */
 			i-cache-line-size = <64>;
 			i-cache-sets = <256>;
 			d-cache-size = <0x10000>;	/* 64KB */
 			d-cache-line-size = <64>;
 			d-cache-sets = <256>;
-			next-level-cache = <&L2_LION>;
-			moce-factors = <&LION_FREQ_FACTOR>;
+			next-level-cache = <&L2_ENYO_1>;
+			moce-factors = <&ENYO_FREQ_FACTOR>;
 		};
 		cpu6: cpu@0100 {
 			device_type = "cpu";
@@ -440,11 +440,11 @@
 		};
 		ucc-config1 {
 			index = <1>;
-			cstate = "6-7";
+			cstate = "5-7";
 		};
 		ucc-config2 {
 			index = <2>;
-			cstate = "6-7";
+			cstate = "5-7";
 		};
 		ucc-config3 {
 			index = <3>;
