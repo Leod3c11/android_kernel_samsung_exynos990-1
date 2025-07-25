@@ -123,12 +123,12 @@
 				core3 {
 					cpu = <&cpu3>;
 				};
+				core4 {
+					cpu = <&cpu4>;
+				};
 			};
 
 			cluster1 {
-				core0 {
-					cpu = <&cpu4>;
-				};
 				core1 {
 					cpu = <&cpu5>;
 				};
@@ -383,12 +383,12 @@
 
 			/* factor table format: [ratio][factor][ratio]...[ratio] */
 			ANANKE_FREQ_FACTOR: ananke-freq-factor {
-				sibling-cpus = "0-3";
+				sibling-cpus = "0-4";
 				type = <FREQ_FACTOR>;
 				ratio-table = <100>;
 			};
 			ENYO_FREQ_FACTOR: enyo-freq-factor {
-				sibling-cpus = "4-5";
+				sibling-cpus = "5";
 				type = <FREQ_FACTOR>;
 				ratio-table = <100>;
 			};
@@ -470,14 +470,14 @@
 
 		domain@0 {
 			device_type = "ufc_domain";
-			shared-cpus = "0-3";
+			shared-cpus = "0-4";
 			table-idx = <3>;	/* index to ref ufc-table */
 			pm_qos-min-class = <3>;
 			pm_qos-max-class = <4>;
 		};
 		domain@1 {
 			device_type = "ufc_domain";
-			shared-cpus = "4-5";
+			shared-cpus = "5";
 			table-idx = <2>;	/* index to ref ufc-table */
 			pm_qos-min-class = <5>;
 			pm_qos-max-class = <6>;
@@ -699,7 +699,7 @@
 
 		domain@0 {
 			device_type = "esgov-pol0";
-			shared-cpus = "0-3";
+			shared-cpus = "0-4";
 			pm_qos-min-class = <3>;
 			pm_qos-max-class = <4>;
 			step = <10>;
@@ -707,7 +707,7 @@
 		};
 		domain@1 {
 			device_type = "esgov-pol4";
-			shared-cpus = "4-5";
+			shared-cpus = "5";
 			pm_qos-min-class = <5>;
 			pm_qos-max-class = <6>;
 			step = <8>;
@@ -726,7 +726,7 @@
 	schedutil_gov {
 		schedutil_domain0: domain@0 {
 			device_type = "schedutil-domain";
-			shared-cpus = "0-3";
+			shared-cpus = "0-4";
 
 			enabled = <0>;          /* Disabled */
 			qos_min_class = <3>;
@@ -734,7 +734,7 @@
 
 		schedutil_domain1: domain@1 {
 			device_type = "schedutil-domain";
-			shared-cpus = "4-5";
+			shared-cpus = "5";
 
 			enabled = <1>;          /* Enabled */
 			expired_time = <80>;    /* 80ms */
@@ -745,7 +745,7 @@
 	cpufreq {
 		cpufreq_domain0: domain@0 {
 			device_type = "cpufreq-domain";
-			sibling-cpus = "0-3";
+			sibling-cpus = "0-4";
 			cal-id = <ACPM_DVFS_CPUCL0>;
 			dm-type = <DM_CPU_CL0>;
 
@@ -796,7 +796,7 @@
 
 		cpufreq_domain1: domain@1 {
 			device_type = "cpufreq-domain";
-			sibling-cpus = "4-5";
+			sibling-cpus = "5";
 			cal-id = <ACPM_DVFS_CPUCL1>;
 			dm-type = <DM_CPU_CL1>;
 
@@ -969,8 +969,8 @@
 		compatible = "samsung,exynos-cpu-profiler";
 		status = "okay";
 
-		#define CPU_CL0 "0-3"
-		#define CPU_CL1 "4-5"
+		#define CPU_CL0 "0-4"
+		#define CPU_CL1 "5"
 		#define CPU_CL2 "6-7"
 
 		cpu_domain0: domain@0 {
@@ -1471,7 +1471,7 @@
 			target-residency = <10000>;
 			psci-index = <128>;
 			type = <POWERMODE_TYPE_CLUSTER>;
-			siblings = "0-3";
+			siblings = "0-4";
 		};
 
 		cpd_cl1 {
@@ -1479,8 +1479,8 @@
 			target-residency = <5000>;
 			psci-index = <128>;
 			type = <POWERMODE_TYPE_CLUSTER>;
-			siblings = "4-5";
-			entry-allowed = "4-5";
+			siblings = "5";
+			entry-allowed = "5";
 		};
 
 		cpd_cl2 {
@@ -1495,8 +1495,8 @@
 
 		vcpu_topology {
 			vcluster_cnt = <3>;
-			vcluster0_sibling = "0-3";
-			vcluster1_sibling = "4-5";
+			vcluster0_sibling = "0-4";
+			vcluster1_sibling = "5";
 			vcluster2_sibling = "6-7";
 		};
 
