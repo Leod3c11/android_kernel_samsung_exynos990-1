@@ -486,22 +486,6 @@ GPEX_STATIC ssize_t show_gpu_freq_table(char *buf)
 }
 CREATE_SYSFS_KOBJECT_READ_FUNCTION(show_gpu_freq_table)
 
-GPEX_STATIC ssize_t set_asv_table(const char *buf, size_t count)
-{
-	int id = 5; /* dvfs_g3d */
-	unsigned int rate, volt;
-
-	if (sscanf(buf, "%u %u", &rate, &volt) == 2) {
-		update_fvmap(id, rate, volt);
-		gpex_clock_update_config_data_from_dt();
-		pr_info("%s: updated DVFS: dvfs_g3d - rate: %u kHz - volt: %u uV\n", __func__, rate, volt);
-		return count;
-	}
-
-	return -EINVAL;
-}
-CREATE_SYSFS_DEVICE_WRITE_FUNCTION(set_asv_table)
-
 GPEX_STATIC ssize_t show_unlock_freqs(char *buf)
 {
 	ssize_t len = 0;
@@ -606,7 +590,7 @@ int gpex_clock_sysfs_init(struct _clock_info *_clk_info)
 		g3d_regulator = NULL;
 
 	GPEX_UTILS_SYSFS_DEVICE_FILE_ADD(clock, show_clock, set_clock);
-	GPEX_UTILS_SYSFS_DEVICE_FILE_ADD(asv_table, show_asv_table, set_asv_table);
+	GPEX_UTILS_SYSFS_DEVICE_FILE_ADD_RO(asv_table, show_asv_table);
 	GPEX_UTILS_SYSFS_DEVICE_FILE_ADD(time_in_state, show_time_in_state, reset_time_in_state);
 	GPEX_UTILS_SYSFS_DEVICE_FILE_ADD(dvfs_max_lock, show_max_lock_dvfs, set_max_lock_dvfs);
 	GPEX_UTILS_SYSFS_DEVICE_FILE_ADD(dvfs_min_lock, show_min_lock_dvfs, set_min_lock_dvfs);
