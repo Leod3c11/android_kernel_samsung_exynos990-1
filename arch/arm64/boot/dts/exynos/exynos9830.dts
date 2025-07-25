@@ -125,17 +125,20 @@
 				};
 			};
 
-			cluster2 {
+			cluster1 {
 				core0 {
 					cpu = <&cpu4>;
 				};
 				core1 {
 					cpu = <&cpu5>;
 				};
-				core2 {
+			};
+
+			cluster2 {
+				core0 {
 					cpu = <&cpu6>;
 				};
-				core3 {
+				core1 {
 					cpu = <&cpu7>;
 				};
 			};
@@ -472,9 +475,16 @@
 			pm_qos-min-class = <3>;
 			pm_qos-max-class = <4>;
 		};
+		domain@1 {
+			device_type = "ufc_domain";
+			shared-cpus = "4-5";
+			table-idx = <2>;	/* index to ref ufc-table */
+			pm_qos-min-class = <5>;
+			pm_qos-max-class = <6>;
+		};
 		domain@2 {
 			device_type = "ufc_domain";
-			shared-cpus = "4-7";
+			shared-cpus = "6-7";
 			table-idx = <1>;	/* index to ref ufc-table */
 			pm_qos-min-class = <7>;
 			pm_qos-max-class = <8>;
@@ -695,9 +705,17 @@
 			step = <10>;
 			patient_mode = <0>;
 		};
+		domain@1 {
+			device_type = "esgov-pol4";
+			shared-cpus = "4-5";
+			pm_qos-min-class = <5>;
+			pm_qos-max-class = <6>;
+			step = <8>;
+			patient_mode = <0>;
+		};
 		domain@2 {
 			device_type = "esgov-pol6";
-			shared-cpus = "4-7";
+			shared-cpus = "6-7";
 			pm_qos-min-class = <7>;
 			pm_qos-max-class = <8>;
 			step = <10>;
@@ -712,6 +730,15 @@
 
 			enabled = <0>;          /* Disabled */
 			qos_min_class = <3>;
+		};
+
+		schedutil_domain1: domain@1 {
+			device_type = "schedutil-domain";
+			shared-cpus = "4-5";
+
+			enabled = <1>;          /* Enabled */
+			expired_time = <80>;    /* 80ms */
+			qos_min_class = <5>;
 		};
 	};
 
@@ -767,9 +794,72 @@
 			};
 		};
 
+		cpufreq_domain1: domain@1 {
+			device_type = "cpufreq-domain";
+			sibling-cpus = "4-5";
+			cal-id = <ACPM_DVFS_CPUCL1>;
+			dm-type = <DM_CPU_CL1>;
+
+			max-freq = <2730000>;
+			min-freq = <507000>;
+
+			/* PM QoS Class ID*/
+			pm_qos-min-class = <5>;
+			pm_qos-max-class = <6>;
+
+			user-default-qos = <845000>;
+			user-boost = <1>;
+
+			#cooling-cells = <2>; /* min followed by max */
+
+			dm-constraints {
+				mif-perf {
+					const-type = <CONSTRAINT_MIN>;
+					dm-type = <DM_MIF>;
+					dynamic-disable;
+
+						/* cpu     mif */
+					table = < 2730000 2730000
+						2600000 2730000
+						2504000 2730000
+						2400000 2535000
+						2314000 2535000
+						2210000 2288000
+						2106000 2288000
+						2002000 2288000
+						1898000 0
+						1794000 0
+						1690000 0
+						1586000 0
+						1508000 0
+						1404000 0
+						1222000 0
+						1066000 0
+						 962000 0
+						 845000 0
+						 754000 0
+						 650000 0
+						 507000 0
+						 377000 0
+						>;
+				};
+				lit-skew {
+					guidance;
+					const-type = <CONSTRAINT_MIN>;
+					dm-type = <DM_CPU_CL0>;
+					ect-name = "CPUCL1";
+				};
+			};
+
+			slack_timer {
+				device_type = "slack-timer-domain";
+				expired_time = <80>;    /* 80ms */
+			};
+		};
+
 		cpufreq_domain2: domain@2 {
 			device_type = "cpufreq-domain";
-			sibling-cpus = "4-7";
+			sibling-cpus = "6-7";
 			cal-id = <ACPM_DVFS_CPUCL2>;
 			dm-type = <DM_CPU_CL2>;
 			need-awake;
@@ -841,14 +931,14 @@
 		compatible = "samsung,exynos-hiu";
 		interrupts = <GIC_SPI INTREQ__CPUCL2_GCUIRQ IRQ_TYPE_LEVEL_HIGH>;
 		boost-threshold = <2002000>;
-		boost-max = <3016000>;
+		boost-max = <2730000>;
 		cal-id = <ACPM_DVFS_CPUCL2>;
 		sw-pbl = <0xff>;
 		bl1-inc = <0>;
 		bl2-inc = <0>;
 		bl3-inc = <0>;
 		operation-mode = <0>;
-		sibling-cpus = "4-7";
+		sibling-cpus = "6-7";
 				/* PB  BL  PBL  PWR_THR_INC */
 		config-table = <0x0 0x0 0xff 0x0        /* config A */
 				0x1 0x2 0xff 0x0        /* config B */
@@ -865,10 +955,10 @@
 
 		interrupts = <GIC_SPI INTREQ__CPUCL2_GCUIRQ IRQ_TYPE_LEVEL_HIGH>;
 
-		sibling-cpus = "4-7";
+		sibling-cpus = "6-7";
 		down-step = <1>;
 
-		max-freq-wo-ocp = <3016000>;
+		max-freq-wo-ocp = <2730000>;
 
 		release-mode = <1>;             /* 0 : current meter, 1 : cpu utilization */
 		release-threshold = <50>;       /* @current meter : current(A), @cpu load : capacity ratio(%) */
@@ -880,7 +970,8 @@
 		status = "okay";
 
 		#define CPU_CL0 "0-3"
-		#define CPU_CL2 "4-7"
+		#define CPU_CL1 "4-5"
+		#define CPU_CL2 "6-7"
 
 		cpu_domain0: domain@0 {
 			/* necessary data */
@@ -893,6 +984,18 @@
 			static-power-coefficient = <6>;
 			tz-name = "LITTLE";
 			dvfs-node = <&cpufreq_domain0>;
+		};
+		cpu_domain1: domain@1 {
+			/* necessary data */
+			sibling-cpus = CPU_CL1;
+			cal-id = <ACPM_DVFS_CPUCL1>;
+
+			/* un-necessary data */
+			migov-id = <MIGOV_CL1>;
+			power-coefficient = <269>;
+			static-power-coefficient = <81>;
+			tz-name = "MID";
+			dvfs-node = <&cpufreq_domain1>;
 		};
 		cpu_domain2: domain@2 {
 			/* necessary data */
@@ -982,6 +1085,17 @@
 			pm-qos-min-class = <3>;
 			pm-qos-max-class = <4>;
 			pm-qos-min-freq = < 0 >;
+		};
+		cl1 {
+			max = < 200 >;
+			min = < (-300) >;
+			up-step = < 3 >;
+			down-step = < 6 >;
+			default-step = < 10 >;
+			stall-pct-thr = < 0 >;		/* temp */
+			pm-qos-min-class = <5>;
+			pm-qos-max-class = <6>;
+			pm-qos-max-freq = < 2730000 >;
 		};
 		cl2 {
 			max = < 200 >;
@@ -1360,20 +1474,30 @@
 			siblings = "0-3";
 		};
 
+		cpd_cl1 {
+			device_type = "cpupm";
+			target-residency = <5000>;
+			psci-index = <128>;
+			type = <POWERMODE_TYPE_CLUSTER>;
+			siblings = "4-5";
+			entry-allowed = "4-5";
+		};
+
 		cpd_cl2 {
 			device_type = "cpupm";
 			target-residency = <5000>;
 			psci-index = <128>;
 			type = <POWERMODE_TYPE_CLUSTER>;
-			siblings = "4-7";
-			entry-allowed = "4-7";
+			siblings = "6-7";
+			entry-allowed = "6-7";
 			sicd-block;
 		};
 
 		vcpu_topology {
 			vcluster_cnt = <3>;
 			vcluster0_sibling = "0-3";
-			vcluster2_sibling = "4-7";
+			vcluster1_sibling = "4-5";
+			vcluster2_sibling = "6-7";
 		};
 
 		sicd {
@@ -2765,6 +2889,69 @@
 				map0 {
 				     trip = <&big_control_temp>;
 				     cooling-device = <&cpufreq_domain2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+			       };
+			};
+		};
+
+		mid_thermal: MID {
+			zone_name  = "MID_THERMAL";
+			polling-delay-passive = <50>;
+			polling-delay = <1000>;
+			thermal-sensors = <&tmuctrl_1>;
+			governor = "power_allocator";
+			sustainable-power = <0>;
+			k_po = <0>;
+			k_pu = <0>;
+			k_i = <0>;
+			i_max = <0>;
+			integral_cutoff = <0>;
+
+			trips {
+				mid_cold: mid-cold {
+					temperature = <20000>;
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				mid_switch_on: mid-switch-on {
+					temperature = <55000>; /* millicelsius */
+					hysteresis = <2000>; /* millicelsius */
+					type = "active";
+				};
+				mid_control_temp: mid-control-temp {
+					temperature = <83000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "passive";
+				};
+				mid_alert0: mid-alert0 {
+					temperature = <95000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				mid_alert1: mid-alert1 {
+					temperature = <100000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				mid_alert2: mid-alert2 {
+					temperature = <105000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				mid_alert3: mid-alert3 {
+					temperature = <110000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "active";
+				};
+				mid_hot: mid-hot {
+					temperature = <115000>; /* millicelsius */
+					hysteresis = <5000>; /* millicelsius */
+					type = "hot";
+				};
+			};
+			cooling-maps {
+				map0 {
+				     trip = <&mid_control_temp>;
+				     cooling-device = <&cpufreq_domain1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 			       };
 			};
 		};
