@@ -132,12 +132,12 @@
 				core1 {
 					cpu = <&cpu5>;
 				};
+				core2 {
+					cpu = <&cpu6>;
+				};
 			};
 
 			cluster2 {
-				core0 {
-					cpu = <&cpu6>;
-				};
 				core1 {
 					cpu = <&cpu7>;
 				};
@@ -242,19 +242,19 @@
 		};
 		cpu6: cpu@0100 {
 			device_type = "cpu";
-			compatible = "arm,lion", "arm,armv8";
+			compatible = "arm,enyo", "arm,armv8";
 			reg = <0x0 0x0100>;
 			enable-method = "psci";
-			cpu-idle-states = <&LION_CPU_SLEEP>;
-			sched-energy-data = <&LION_ENERGY>;
+			cpu-idle-states = <&ENYO_CPU_SLEEP>;
+			sched-energy-data = <&ENYO_ENERGY>;
 			i-cache-size = <0x10000>;	/* 64KB */
 			i-cache-line-size = <128>;
 			i-cache-sets = <128>;
 			d-cache-size = <0x10000>;	/* 64KB */
 			d-cache-line-size = <64>;
 			d-cache-sets = <256>;
-			next-level-cache = <&L2_LION>;
-			moce-factors = <&LION_FREQ_FACTOR>;
+			next-level-cache = <&L2_ENYO_1>;
+			moce-factors = <&ENYO_FREQ_FACTOR>;
 		};
 		cpu7: cpu@0101 {
 			device_type = "cpu";
@@ -388,12 +388,12 @@
 				ratio-table = <100>;
 			};
 			ENYO_FREQ_FACTOR: enyo-freq-factor {
-				sibling-cpus = "4-5";
+				sibling-cpus = "4-6";
 				type = <FREQ_FACTOR>;
 				ratio-table = <100>;
 			};
 			LION_FREQ_FACTOR: lion-freq-factor {
-				sibling-cpus = "6-7";
+				sibling-cpus = "7";
 				type = <FREQ_FACTOR>;
 				ratio-table = <100>;
 			};
@@ -477,14 +477,14 @@
 		};
 		domain@1 {
 			device_type = "ufc_domain";
-			shared-cpus = "4-5";
+			shared-cpus = "4-6";
 			table-idx = <2>;	/* index to ref ufc-table */
 			pm_qos-min-class = <5>;
 			pm_qos-max-class = <6>;
 		};
 		domain@2 {
 			device_type = "ufc_domain";
-			shared-cpus = "6-7";
+			shared-cpus = "7";
 			table-idx = <1>;	/* index to ref ufc-table */
 			pm_qos-min-class = <7>;
 			pm_qos-max-class = <8>;
@@ -707,7 +707,7 @@
 		};
 		domain@1 {
 			device_type = "esgov-pol4";
-			shared-cpus = "4-5";
+			shared-cpus = "4-6";
 			pm_qos-min-class = <5>;
 			pm_qos-max-class = <6>;
 			step = <8>;
@@ -715,7 +715,7 @@
 		};
 		domain@2 {
 			device_type = "esgov-pol6";
-			shared-cpus = "6-7";
+			shared-cpus = "7";
 			pm_qos-min-class = <7>;
 			pm_qos-max-class = <8>;
 			step = <10>;
@@ -734,7 +734,7 @@
 
 		schedutil_domain1: domain@1 {
 			device_type = "schedutil-domain";
-			shared-cpus = "4-5";
+			shared-cpus = "4-6";
 
 			enabled = <1>;          /* Enabled */
 			expired_time = <80>;    /* 80ms */
@@ -796,7 +796,7 @@
 
 		cpufreq_domain1: domain@1 {
 			device_type = "cpufreq-domain";
-			sibling-cpus = "4-5";
+			sibling-cpus = "4-6";
 			cal-id = <ACPM_DVFS_CPUCL1>;
 			dm-type = <DM_CPU_CL1>;
 
@@ -859,7 +859,7 @@
 
 		cpufreq_domain2: domain@2 {
 			device_type = "cpufreq-domain";
-			sibling-cpus = "6-7";
+			sibling-cpus = "7";
 			cal-id = <ACPM_DVFS_CPUCL2>;
 			dm-type = <DM_CPU_CL2>;
 			need-awake;
@@ -938,7 +938,7 @@
 		bl2-inc = <0>;
 		bl3-inc = <0>;
 		operation-mode = <0>;
-		sibling-cpus = "6-7";
+		sibling-cpus = "7";
 				/* PB  BL  PBL  PWR_THR_INC */
 		config-table = <0x0 0x0 0xff 0x0        /* config A */
 				0x1 0x2 0xff 0x0        /* config B */
@@ -955,7 +955,7 @@
 
 		interrupts = <GIC_SPI INTREQ__CPUCL2_GCUIRQ IRQ_TYPE_LEVEL_HIGH>;
 
-		sibling-cpus = "6-7";
+		sibling-cpus = "7";
 		down-step = <1>;
 
 		max-freq-wo-ocp = <2730000>;
@@ -970,8 +970,8 @@
 		status = "okay";
 
 		#define CPU_CL0 "0-3"
-		#define CPU_CL1 "4-5"
-		#define CPU_CL2 "6-7"
+		#define CPU_CL1 "4-6"
+		#define CPU_CL2 "7"
 
 		cpu_domain0: domain@0 {
 			/* necessary data */
@@ -1479,8 +1479,8 @@
 			target-residency = <5000>;
 			psci-index = <128>;
 			type = <POWERMODE_TYPE_CLUSTER>;
-			siblings = "4-5";
-			entry-allowed = "4-5";
+			siblings = "4-6";
+			entry-allowed = "4-6";
 		};
 
 		cpd_cl2 {
@@ -1488,16 +1488,16 @@
 			target-residency = <5000>;
 			psci-index = <128>;
 			type = <POWERMODE_TYPE_CLUSTER>;
-			siblings = "6-7";
-			entry-allowed = "6-7";
+			siblings = "7";
+			entry-allowed = "7";
 			sicd-block;
 		};
 
 		vcpu_topology {
 			vcluster_cnt = <3>;
 			vcluster0_sibling = "0-3";
-			vcluster1_sibling = "4-5";
-			vcluster2_sibling = "6-7";
+			vcluster1_sibling = "4-7";
+			vcluster2_sibling = "7";
 		};
 
 		sicd {
