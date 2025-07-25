@@ -232,8 +232,8 @@
 			cpu-idle-states = <&LION_CPU_SLEEP>;
 			sched-energy-data = <&LION_ENERGY>;
 			i-cache-size = <0x10000>;	/* 64KB */
-			i-cache-line-size = <128>;
-			i-cache-sets = <128>;
+			i-cache-line-size = <64>;
+			i-cache-sets = <256>;
 			d-cache-size = <0x10000>;	/* 64KB */
 			d-cache-line-size = <64>;
 			d-cache-sets = <256>;
