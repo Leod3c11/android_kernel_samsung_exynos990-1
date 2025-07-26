@@ -132,13 +132,6 @@
 				core1 {
 					cpu = <&cpu5>;
 				};
-				core2 {
-					cpu = <&cpu6>;
-				};
-
-				core3 {
-					cpu = <&cpu7>;
-				};
 			};
 		};
 
@@ -232,38 +225,6 @@
 			i-cache-size = <0x10000>;	/* 64KB */
 			i-cache-line-size = <64>;
 			i-cache-sets = <256>;
-			d-cache-size = <0x10000>;	/* 64KB */
-			d-cache-line-size = <64>;
-			d-cache-sets = <256>;
-			next-level-cache = <&L2_ENYO_1>;
-			moce-factors = <&ENYO_FREQ_FACTOR>;
-		};
-		cpu6: cpu@0100 {
-			device_type = "cpu";
-			compatible = "arm,enyo", "arm,armv8";
-			reg = <0x0 0x0100>;
-			enable-method = "psci";
-			cpu-idle-states = <&ENYO_CPU_SLEEP>;
-			sched-energy-data = <&ENYO_ENERGY>;
-			i-cache-size = <0x10000>;	/* 64KB */
-			i-cache-line-size = <128>;
-			i-cache-sets = <128>;
-			d-cache-size = <0x10000>;	/* 64KB */
-			d-cache-line-size = <64>;
-			d-cache-sets = <256>;
-			next-level-cache = <&L2_ENYO_1>;
-			moce-factors = <&ENYO_FREQ_FACTOR>;
-		};
-		cpu7: cpu@0101 {
-			device_type = "cpu";
-			compatible = "arm,enyo", "arm,armv8";
-			reg = <0x0 0x0101>;
-			enable-method = "psci";
-			cpu-idle-states = <&ENYO_CPU_SLEEP>;
-			sched-energy-data = <&ENYO_ENERGY>;
-			i-cache-size = <0x10000>;	/* 64KB */
-			i-cache-line-size = <128>;
-			i-cache-sets = <128>;
 			d-cache-size = <0x10000>;	/* 64KB */
 			d-cache-line-size = <64>;
 			d-cache-sets = <256>;
@@ -376,7 +337,7 @@
 				ratio-table = <100>;
 			};
 			ENYO_FREQ_FACTOR: enyo-freq-factor {
-				sibling-cpus = "4-7";
+				sibling-cpus = "4-5";
 				type = <FREQ_FACTOR>;
 				ratio-table = <100>;
 			};
@@ -419,15 +380,15 @@
 	cpuidle-ucc {
 		ucc-config0 {
 			index = <0>;
-			cstate = "4-7";
+			cstate = "4-5";
 		};
 		ucc-config1 {
 			index = <1>;
-			cstate = "6-7";
+			cstate = "4-5";
 		};
 		ucc-config2 {
 			index = <2>;
-			cstate = "6-7";
+			cstate = "4-5";
 		};
 		ucc-config3 {
 			index = <3>;
@@ -684,7 +645,7 @@
 		};
 		domain@1 {
 			device_type = "esgov-pol4";
-			shared-cpus = "4-7";
+			shared-cpus = "4-5";
 			pm_qos-min-class = <5>;
 			pm_qos-max-class = <6>;
 			step = <8>;
@@ -703,7 +664,7 @@
 
 		schedutil_domain1: domain@1 {
 			device_type = "schedutil-domain";
-			shared-cpus = "4-7";
+			shared-cpus = "4-5";
 
 			enabled = <1>;          /* Enabled */
 			expired_time = <80>;    /* 80ms */
@@ -765,7 +726,7 @@
 
 		cpufreq_domain1: domain@1 {
 			device_type = "cpufreq-domain";
-			sibling-cpus = "4-7";
+			sibling-cpus = "4-5";
 			cal-id = <ACPM_DVFS_CPUCL1>;
 			dm-type = <DM_CPU_CL1>;
 
@@ -855,7 +816,7 @@
 
 		interrupts = <GIC_SPI INTREQ__CPUCL2_GCUIRQ IRQ_TYPE_LEVEL_HIGH>;
 
-		sibling-cpus = "7";
+		sibling-cpus = "5";
 		down-step = <1>;
 
 		max-freq-wo-ocp = <2730000>;
@@ -870,7 +831,7 @@
 		status = "okay";
 
 		#define CPU_CL0 "0-3"
-		#define CPU_CL1 "4-7"
+		#define CPU_CL1 "4-5"
 
 		cpu_domain0: domain@0 {
 			/* necessary data */
@@ -983,17 +944,6 @@
 			pm-qos-min-class = <5>;
 			pm-qos-max-class = <6>;
 			pm-qos-max-freq = < 2730000 >;
-		};
-		cl2 {
-			max = < 200 >;
-			min = < (-300) >;
-			up-step = < 3 >;
-			down-step = < 6 >;
-			default-step = < 10 >;
-			stall-pct-thr = < 0 >;		/* temp */
-			pm-qos-min-class = <7>;
-			pm-qos-max-class = <8>;
-			pm-qos-max-freq = < 3016000 >;
 		};
 		gpu {
 			max = < 220 >;
@@ -1366,14 +1316,14 @@
 			target-residency = <5000>;
 			psci-index = <128>;
 			type = <POWERMODE_TYPE_CLUSTER>;
-			siblings = "4-7";
-			entry-allowed = "4-7";
+			siblings = "4-5";
+			entry-allowed = "4-5";
 		};
 
 		vcpu_topology {
 			vcluster_cnt = <2>;
 			vcluster0_sibling = "0-3";
-			vcluster1_sibling = "4-7";
+			vcluster1_sibling = "4-5";
 		};
 
 		sicd {
@@ -1381,7 +1331,7 @@
 			target-residency = <10000>;
 			psci-index = <256>;
 			type = <POWERMODE_TYPE_SYSTEM>;
-			siblings = "0-7";
+			siblings = "0-5";
 			entry-allowed = "0-5";
 			system-idle;
 		};
@@ -2164,12 +2114,6 @@
 				cal_id = <ACPM_DVFS_CPUCL1>;
 				dm_type_name = "dm_cpu_cl1";
 			};
-			cpufreq_cl2 {
-				dm-index = <DM_CPU_CL2>;
-				available = "true";
-				cal_id = <ACPM_DVFS_CPUCL2>;
-				dm_type_name = "dm_cpu_cl2";
-			};
 			devfreq_mif {
 				dm-index = <DM_MIF>;
 				available = "true";
@@ -2626,20 +2570,6 @@
 			bts_update = "false";
 			dfs_id = <ACPM_DVFS_TNR>;
 		};
-	};
-
-	tmuctrl_0: BIG@10090000 {
-		compatible = "samsung,exynos-tmu-v2";
-		reg = <0x0 0x10090000 0x800>;
-		interrupts = <GIC_SPI INTREQ__TMU_TMU_TOP IRQ_TYPE_LEVEL_HIGH>;
-		tmu_name = "BIG";
-		id = <0>;
-		sensors = <62>;	/* 0x3E */
-		sensing_mode = "balance";
-		hotplug_enable = <1>;
-		hotplug_in_threshold = <91>;
-		hotplug_out_threshold = <96>;
-		#thermal-sensor-cells = <0>;
 	};
 
 	tmuctrl_1: MID@10090000 {
