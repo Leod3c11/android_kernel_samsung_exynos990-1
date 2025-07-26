@@ -1496,7 +1496,7 @@
 		vcpu_topology {
 			vcluster_cnt = <3>;
 			vcluster0_sibling = "0-3";
-			vcluster1_sibling = "4-7";
+			vcluster1_sibling = "4-6";
 			vcluster2_sibling = "7";
 		};
 
