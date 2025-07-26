@@ -610,10 +610,10 @@ int gpex_clock_sysfs_init(struct _clock_info *_clk_info)
 	GPEX_UTILS_SYSFS_DEVICE_FILE_ADD(time_in_state, show_time_in_state, reset_time_in_state);
 	GPEX_UTILS_SYSFS_DEVICE_FILE_ADD(dvfs_max_lock, show_max_lock_dvfs, set_max_lock_dvfs);
 	GPEX_UTILS_SYSFS_DEVICE_FILE_ADD(dvfs_min_lock, show_min_lock_dvfs, set_min_lock_dvfs);
-	GPEX_UTILS_SYSFS_DEVICE_FILE_ADD_RO(dvfs_max_lock_status, show_max_lock_status);
-	GPEX_UTILS_SYSFS_DEVICE_FILE_ADD_RO(dvfs_min_lock_status, show_min_lock_status);
+	GPEX_UTILS_SYSFS_DEVICE_FILE_ADD(dvfs_max_lock_status, show_max_lock_status);
+	GPEX_UTILS_SYSFS_DEVICE_FILE_ADD(dvfs_min_lock_status, show_min_lock_status);
         GPEX_UTILS_SYSFS_DEVICE_FILE_ADD(unlock_freqs, show_unlock_freqs, set_unlock_freqs);
-        GPEX_UTILS_SYSFS_DEVICE_FILE_ADD_RO(volt, show_volt);
+        GPEX_UTILS_SYSFS_DEVICE_FILE_ADD(volt, show_volt);
 
         GPEX_UTILS_SYSFS_DEVICE_FILE_ADD(volt_table, show_volt_table, set_volt_table);
 
