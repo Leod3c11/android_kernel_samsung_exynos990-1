@@ -1026,6 +1026,11 @@
 		dvfs-node = <&mali>;
 	};
 
+        gpu_freq_ctrl {
+		compatible = "samsung,exynos-gpu-freq-ctrl";
+		status = "okay";
+	};
+
 	exynos-mif-profiler {
 		compatible = "samsung,exynos-mif-profiler";
 		status = "okay";
