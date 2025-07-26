@@ -732,7 +732,6 @@ static void fvmap_copy_from_sram(void __iomem *map_base, void __iomem *sram_base
 				else if ((old->table[j].rate == 927000) && (old->table[j].volt < 750000))
 					old->table[j].volt = 750000;
 			}
-			}
 			new->table[j].rate = old->table[j].rate;
 			new->table[j].volt = old->table[j].volt;
 			pr_info("  lv : [%7d], volt = %d uV (%d %%) \n",
