@@ -135,10 +135,8 @@
 				core2 {
 					cpu = <&cpu6>;
 				};
-			};
 
-			cluster2 {
-				core1 {
+				core3 {
 					cpu = <&cpu7>;
 				};
 			};
@@ -258,19 +256,19 @@
 		};
 		cpu7: cpu@0101 {
 			device_type = "cpu";
-			compatible = "arm,lion", "arm,armv8";
+			compatible = "arm,enyo", "arm,armv8";
 			reg = <0x0 0x0101>;
 			enable-method = "psci";
-			cpu-idle-states = <&LION_CPU_SLEEP>;
-			sched-energy-data = <&LION_ENERGY>;
+			cpu-idle-states = <&ENYO_CPU_SLEEP>;
+			sched-energy-data = <&ENYO_ENERGY>;
 			i-cache-size = <0x10000>;	/* 64KB */
 			i-cache-line-size = <128>;
 			i-cache-sets = <128>;
 			d-cache-size = <0x10000>;	/* 64KB */
 			d-cache-line-size = <64>;
 			d-cache-sets = <256>;
-			next-level-cache = <&L2_LION>;
-			moce-factors = <&LION_FREQ_FACTOR>;
+			next-level-cache = <&L2_ENYO_1>;
+			moce-factors = <&ENYO_FREQ_FACTOR>;
 		};
 
 		L2_ANANKE_0: l2-cache@0000 {
@@ -366,16 +364,6 @@
 				min-residency-us = <1000>;
 				status = "okay";
 			};
-
-			LION_CPU_SLEEP: lion-cpu-sleep {
-				idle-state-name = "c2";
-				compatible = "exynos,idle-state";
-				arm,psci-suspend-param = <0x0010000>;
-				entry-latency-us = <235>;
-				exit-latency-us = <220>;
-				min-residency-us = <1000>;
-				status = "okay";
-			};
 		};
 
 		moce {
@@ -388,12 +376,7 @@
 				ratio-table = <100>;
 			};
 			ENYO_FREQ_FACTOR: enyo-freq-factor {
-				sibling-cpus = "4-6";
-				type = <FREQ_FACTOR>;
-				ratio-table = <100>;
-			};
-			LION_FREQ_FACTOR: lion-freq-factor {
-				sibling-cpus = "7";
+				sibling-cpus = "4-7";
 				type = <FREQ_FACTOR>;
 				ratio-table = <100>;
 			};
@@ -477,18 +460,12 @@
 		};
 		domain@1 {
 			device_type = "ufc_domain";
-			shared-cpus = "4-6";
+			shared-cpus = "4-7";
 			table-idx = <2>;	/* index to ref ufc-table */
 			pm_qos-min-class = <5>;
 			pm_qos-max-class = <6>;
 		};
-		domain@2 {
-			device_type = "ufc_domain";
-			shared-cpus = "7";
-			table-idx = <1>;	/* index to ref ufc-table */
-			pm_qos-min-class = <7>;
-			pm_qos-max-class = <8>;
-		};
+
 		max-limit {
 			device_type = "ufc_table";
 			ctrl-type = <PM_QOS_MAX_LIMIT>;
@@ -707,18 +684,10 @@
 		};
 		domain@1 {
 			device_type = "esgov-pol4";
-			shared-cpus = "4-6";
+			shared-cpus = "4-7";
 			pm_qos-min-class = <5>;
 			pm_qos-max-class = <6>;
 			step = <8>;
-			patient_mode = <0>;
-		};
-		domain@2 {
-			device_type = "esgov-pol6";
-			shared-cpus = "7";
-			pm_qos-min-class = <7>;
-			pm_qos-max-class = <8>;
-			step = <10>;
 			patient_mode = <0>;
 		};
 	};
@@ -734,7 +703,7 @@
 
 		schedutil_domain1: domain@1 {
 			device_type = "schedutil-domain";
-			shared-cpus = "4-6";
+			shared-cpus = "4-7";
 
 			enabled = <1>;          /* Enabled */
 			expired_time = <80>;    /* 80ms */
@@ -796,7 +765,7 @@
 
 		cpufreq_domain1: domain@1 {
 			device_type = "cpufreq-domain";
-			sibling-cpus = "4-6";
+			sibling-cpus = "4-7";
 			cal-id = <ACPM_DVFS_CPUCL1>;
 			dm-type = <DM_CPU_CL1>;
 
@@ -856,75 +825,6 @@
 				expired_time = <80>;    /* 80ms */
 			};
 		};
-
-		cpufreq_domain2: domain@2 {
-			device_type = "cpufreq-domain";
-			sibling-cpus = "7";
-			cal-id = <ACPM_DVFS_CPUCL2>;
-			dm-type = <DM_CPU_CL2>;
-			need-awake;
-
-			max-freq = <3016000>;
-			min-freq = <546000>;
-
-			/* PM QoS Class ID*/
-			pm_qos-min-class = <7>;
-			pm_qos-max-class = <8>;
-
-                        pm_qos-booting = <2002000>;
-
-			user-default-qos = <962000>;
-			user-boost = <0>;
-
-			#cooling-cells = <2>; /* min followed by max */
-
-			dm-constraints {
-				mif-perf {
-					const-type = <CONSTRAINT_MIN>;
-					dm-type = <DM_MIF>;
-					dynamic-disable;
-
-					/*  cpu     mif  */
-					table = < 3016000 2730000
-						2834000 2730000
-						2730000 2730000
-						2626000 2730000
-						2522000 2730000
-						2418000 2535000
-						2314000 2535000
-						2210000 2288000
-						2002000 2288000
-						1898000 0
-						1794000 0
-						1690000 0
-						1586000 0
-						1482000 0
-						1378000 0
-						1274000 0
-						1170000 0
-						1066000 0
-						962000  0
-						858000 0
-						754000 0
-						650000 0
-						546000 0
-						>;
-				};
-				mif-skew {
-					guidance;
-					const-type = <CONSTRAINT_MIN>;
-					dm-type = <DM_MIF>;
-					ect-name = "CPUCL2";
-				};
-			};
-
-			slack_timer {
-				device_type = "slack-timer-domain";
-
-				enabled = <1>;          /* Enabled */
-				expired_time = <80>;    /* 80ms */
-			};
-		};
 	};
 
 	exynos-hiu {
@@ -970,8 +870,7 @@
 		status = "okay";
 
 		#define CPU_CL0 "0-3"
-		#define CPU_CL1 "4-6"
-		#define CPU_CL2 "7"
+		#define CPU_CL1 "4-7"
 
 		cpu_domain0: domain@0 {
 			/* necessary data */
@@ -996,18 +895,6 @@
 			static-power-coefficient = <81>;
 			tz-name = "MID";
 			dvfs-node = <&cpufreq_domain1>;
-		};
-		cpu_domain2: domain@2 {
-			/* necessary data */
-			sibling-cpus = CPU_CL2;
-			cal-id = <ACPM_DVFS_CPUCL2>;
-
-			/* un-necessary data */
-			migov-id = <MIGOV_CL2>;
-			power-coefficient = <719>;
-			static-power-coefficient = <270>;
-			tz-name = "BIG";
-			dvfs-node = <&cpufreq_domain2>;
 		};
 	};
 
@@ -1479,25 +1366,14 @@
 			target-residency = <5000>;
 			psci-index = <128>;
 			type = <POWERMODE_TYPE_CLUSTER>;
-			siblings = "4-6";
-			entry-allowed = "4-6";
-		};
-
-		cpd_cl2 {
-			device_type = "cpupm";
-			target-residency = <5000>;
-			psci-index = <128>;
-			type = <POWERMODE_TYPE_CLUSTER>;
-			siblings = "7";
-			entry-allowed = "7";
-			sicd-block;
+			siblings = "4-7";
+			entry-allowed = "4-7";
 		};
 
 		vcpu_topology {
-			vcluster_cnt = <3>;
+			vcluster_cnt = <2>;
 			vcluster0_sibling = "0-3";
 			vcluster1_sibling = "4-7";
-			vcluster2_sibling = "7";
 		};
 
 		sicd {
