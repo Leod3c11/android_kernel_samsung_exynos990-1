@@ -26,7 +26,6 @@
 #include "exynos9830-pmucal-dbg.dtsi"
 #include "exynos9830-audio.dtsi"
 #include <dt-bindings/ufs/ufs.h>
-#include "exynos9830-debug.dtsi"
 #include "exynos9830-mali.dtsi"
 #include "exynos9830-bts.dtsi"
 #include "exynos9830-dpu.dtsi"
