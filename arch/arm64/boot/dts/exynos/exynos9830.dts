@@ -95,7 +95,7 @@
 					<&cpu2>,
 					<&cpu3>,
 					<&cpu4>,
-					<&cpu5>,
+					<&cpu5>;
 	};
 
 	fmp_0: fmp {
