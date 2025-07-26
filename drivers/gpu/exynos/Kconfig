@@ -10,6 +10,11 @@ config EXYNOS_HDR_TUNABLE_TONEMAPPING
 
 	  This is just for display tunning purpose only for HDR videos.
 
+config EXYNOS_GPU_FREQ_CTRL
+	tristate "Exynos GPU freq controller"
+	depends on SOC_EXYNOS
+	default y
+
 menu "Exynos Graphic Devices"
 source "drivers/gpu/exynos/g2d/Kconfig"
 endmenu
