@@ -711,8 +711,8 @@ static void fvmap_copy_from_sram(void __iomem *map_base, void __iomem *sram_base
 		         if (strcmp(vclk->name, "dvfs_cpucl2") == 0) {
 				if (old->table[j].rate == 3016000)
 					old->table[j].rate = 3106000;
-				if (old->table[j].rate == 2834000)
-					old->table[j].rate = 2930000;
+				if (old->table[j].rate == 2600000)
+					old->table[j].rate = 2730000;
 			}
 		         if (strcmp(vclk->name, "dvfs_cpucl1") == 0) {
 				if (old->table[j].rate == 2600000)
