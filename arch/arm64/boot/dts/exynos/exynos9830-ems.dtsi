@@ -62,8 +62,8 @@
 			};
 			/* middle cores */
 			coregroup1 {
-				active-ratio-limit = <48>;
-				active-ratio-boost = <35>;
+				active-ratio-limit = <30>;
+				active-ratio-boost = <0>;
 			};
 			/* big cores */
 			coregroup2 {
@@ -246,20 +246,20 @@
 
 				/* weight (%) applied to active cpu's efficiency */
 				weight {           /* cpu    0   1   2   3   4   5   6   7 */
-					root            = <100 100 100 100 200 200  20  25>;
-					foreground      = <100 100 100 100 200 200  20  25>;
-					background      = <100 100 100 100 200 200  20  25>;
-					top-app         = <100 100 100 100 200 200  20  25>;
-					rt              = <100 100 100 100 200 200  20  25>;
+					root            = <100 100 100 100 100 100  20  25>;
+					foreground      = <100 100 100 100 100 100  20  25>;
+					background      = <100 100 100 100 100 100  20  25>;
+					top-app         = <100 100 100 100 100 100  20  25>;
+					rt              = <100 100 100 100 100 100  20  25>;
 				};
 
 				/* weight (%) applied to idle cpu's efficiency */
 				idle_weight {      /* cpu    0   1   2   3   4   5   6   7 */
-					root            = <200 200 200 200 400 400  40  50>;
-					foreground      = <200 200 200 200 400 400  40  50>;
-					background      = <200 200 200 200 400 400  40  50>;
-					top-app         = <200 200 200 200 400 400  40  50>;
-					rt              = <200 200 200 200 400 400  40  50>;
+					root            = <200 200 200 200 200 200  40  50>;
+					foreground      = <200 200 200 200 200 200  40  50>;
+					background      = <200 200 200 200 200 200  40  50>;
+					top-app         = <200 200 200 200 200 200  40  50>;
+					rt              = <200 200 200 200 200 200  40  50>;
 				};
 
 				/* Boosting margin applied to frequency selection */
@@ -275,9 +275,9 @@
 				cpus_allowed {
 					target-sched-class = <EMS_SCHED_FAIR>;
 
-					root		= "0-7";
-					foreground 	= "0-7";
-					background	= "0-7";
+					root		= "0-5";
+					foreground 	= "0-5";
+					background	= "0-5";
 					top-app		= "0-7";
 					rt		= "0-7";
 				};
@@ -353,20 +353,20 @@
 
 				/* weight (%) applied to active cpu's efficiency */
 				weight {           /* cpu    0   1   2   3   4   5   6   7 */
-					root            = <100 100 100 100 200 200  20  25>;
-					foreground      = < 50  50  50  50 150 150 100 106>;
-					background      = <100 100 100 100 200 200  20  25>;
-					top-app         = < 50  50  50  50 150 150 100 106>;
-					rt              = <100 100 100 100 200 200  20  25>;
+					root            = <100 100 100 100  20  20  20  25>;
+					foreground      = < 50  50  50  50 100 100 100 106>;
+					background      = <100 100 100 100  20  20  20  25>;
+					top-app         = < 50  50  50  50 100 100 100 106>;
+					rt              = <100 100 100 100  20  20  20  25>;
 				};
 
 				/* weight (%) applied to idle cpu's efficiency */
 				idle_weight {      /* cpu    0   1   2   3   4   5   6   7 */
-					root            = <200 200 200 200 400 400  40  50>;
-					foreground      = <200 200 200 200 7600 7600 3800 4028>;
+					root            = <200 200 200 200  40  40  40  50>;
+					foreground      = <200 200 200 200 3800 3800 3800 4028>;
 					background      = <200 200 200 200 400 400  40  50>;
-					top-app         = <200 200 200 200 7600 7600 3800 4028>;
-					rt              = <200 200 200 200 400 400  40  50>;
+					top-app         = <200 200 200 200 3800 3800 3800 4028>;
+					rt              = <200 200 200 200  40  40  40  50>;
 				};
 
 				/* Boosting margin applied to frequency selection */
@@ -385,20 +385,20 @@
 
 				/* weight (%) applied to active cpu's efficiency */
 				weight {           /* cpu    0   1   2   3   4   5   6   7 */
-					root            = <100 100 100 100 200 200  20  25>;
-					foreground      = < 50  50  50  50 150 150 100 106>;
-					background      = <100 100 100 100 200 200  20  25>;
-					top-app         = < 50  50  50  50 150 150 100 106>;
-					rt              = <100 100 100 100 200 200  20  25>;
+					root            = <100 100 100 100  20  20  20  25>;
+					foreground      = < 50  50  50  50 100 100 100 106>;
+					background      = <100 100 100 100  20  20  20  25>;
+					top-app         = < 50  50  50  50 100 100 100 106>;
+					rt              = <100 100 100 100  20  20  20  25>;
 				};
 
 				/* weight (%) applied to idle cpu's efficiency */
 				idle_weight {      /* cpu    0   1   2   3   4   5   6   7 */
-					root            = <200 200 200 200 400 400  40  50>;
-					foreground      = <200 200 200 200 7600 7600 3800 4028>;
-					background      = <200 200 200 200 400 400  40  50>;
-					top-app         = <200 200 200 200 7600 7600 3800 4028>;
-					rt              = <200 200 200 200 400 400  40  50>;
+					root            = <200 200 200 200  40  40  40  50>;
+					foreground      = <200 200 200 200 3800 3800 3800 4028>;
+					background      = <200 200 200 200  40  40  40  50>;
+					top-app         = <200 200 200 200 3800 3800 3800 4028>;
+					rt              = <200 200 200 200  40  40  40  50>;
 				};
 
 				/* Boosting margin applied to frequency selection */
@@ -431,9 +431,9 @@
 				/* weight (%) applied to active cpu's efficiency */
 				weight {           /* cpu    0   1   2   3   4   5   6   7 */
 					root            = <100 100 100 100 100 100 100 100>;
-					foreground      = <100 100 100 100 200 200 300 300>;
+					foreground      = <100 100 100 100 200 200 200 200>;
 					background      = <100 100 100 100 100 100 100 100>;
-					top-app         = <100 100 100 100 200 200 300 300>;
+					top-app         = <100 100 100 100 200 200 200 200>;
 					rt              = <100 100 100 100 200 200 100 100>;
 				};
 
@@ -518,20 +518,20 @@
 
 				/* weight (%) applied to active cpu's efficiency */
 				weight {           /* cpu    0   1   2   3   4   5   6   7 */
-					root            = <1280 1280 1280 1280 200 200  20  25>;
-					foreground      = <1280 1280 1280 1280 200 200  20  25>;
-					background      = <1280 1280 1280 1280 200 200  20  25>;
-					top-app         = <1280 1280 1280 1280 200 200  20  25>;
-					rt              = <1280 1280 1280 1280 200 200  20  25>;
+					root            = <1280 1280 1280 1280  20  20  20  25>;
+					foreground      = <1280 1280 1280 1280  20  20  20  25>;
+					background      = <1280 1280 1280 1280  20  20  20  25>;
+					top-app         = <1280 1280 1280 1280  20  20  20  25>;
+					rt              = <1280 1280 1280 1280  20  20  20  25>;
 				};
 
 				/* weight (%) applied to idle cpu's efficiency */
 				idle_weight {      /* cpu    0   1   2   3   4   5   6   7 */
-					root            = <2560 2560 2560 2560 400 400  40  50>;
-					foreground      = <2560 2560 2560 2560 400 400  40  50>;
-					background      = <2560 2560 2560 2560 400 400  40  50>;
-					top-app         = <2560 2560 2560 2560 400 400  40  50>;
-					rt              = <2560 2560 2560 2560 400 400  40  50>;
+					root            = <2560 2560 2560 2560  40  40  40  50>;
+					foreground      = <2560 2560 2560 2560  40  40  40  50>;
+					background      = <2560 2560 2560 2560  40  40  40  50>;
+					top-app         = <2560 2560 2560 2560  40  40  40  50>;
+					rt              = <2560 2560 2560 2560  40  40  40  50>;
 				};
 
 				/* Boosting margin applied to frequency selection */
@@ -704,9 +704,9 @@
 				/* weight (%) applied to active cpu's efficiency */
 				weight {           /* cpu    0   1   2   3   4   5   6   7 */
 					root            = <100 100 100 100 100 100 100 100>;
-					foreground      = <100 100 100 100 200 200 300 300>;
+					foreground      = <100 100 100 100 200 200 200 200>;
 					background      = <100 100 100 100 100 100 100 100>;
-					top-app         = <100 100 100 100 200 200 300 300>;
+					top-app         = <100 100 100 100 200 200 200 200>;
 					rt              = <100 100 100 100 200 200 100 100>;
 				};
 
@@ -981,9 +981,9 @@
 				/* weight (%) applied to active cpu's efficiency */
 				weight {           /* cpu    0   1   2   3   4   5   6   7 */
 					root            = <100 100 100 100 100 100 100 100>;
-					foreground      = <100 100 100 100 200 200 300 300>;
+					foreground      = <100 100 100 100 200 200 200 200>;
 					background      = <100 100 100 100 100 100 100 100>;
-					top-app         = <100 100 100 100 200 200 300 300>;
+					top-app         = <100 100 100 100 200 200 200 200>;
 					rt              = <100 100 100 100 200 200 100 100>;
 				};
 
