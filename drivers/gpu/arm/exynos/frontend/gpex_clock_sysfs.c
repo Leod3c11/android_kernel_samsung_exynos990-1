@@ -492,7 +492,7 @@ GPEX_STATIC ssize_t set_asv_table(const char *buf, size_t count)
 	unsigned int rate, volt;
 
 	if (sscanf(buf, "%u %u", &rate, &volt) == 2) {
-// update_fvmap(id, rate, volt); // Removido: função não implementada
+		update_fvmap(id, rate, volt);
 		gpex_clock_update_config_data_from_dt();
 		pr_info("%s: updated DVFS: dvfs_g3d - rate: %u kHz - volt: %u uV\n", __func__, rate, volt);
 		return count;
@@ -582,20 +582,18 @@ GPEX_STATIC ssize_t set_volt_table(const char *buf, size_t count)
 	int i, tokens;
 	int t[min - max];
 
-	if ((tokens = read_into((int *)&t, min - max, buf, count)) < 0)
-    return -EINVAL;
+	if ((tokens = read_into((int*)&t, min-max, buf, count)) < 0)
+		return -EINVAL;
 
-if (tokens == 2) {
-    // fvmap_patch(GPU_DVFS_TYPE, t[0], t[1]); // Removido: função não implementada
-} else {
-    for (i = 0; i < tokens; i++) {
-        // fvmap_patch(GPU_DVFS_TYPE, clk_info->table[i + max].clock, t[i]); // Removido: função não implementada
-    }
-}
+	if (tokens == 2)
+		fvmap_patch(GPU_DVFS_TYPE, t[0], t[1]);
+	else
+		for (i = 0; i < tokens; i++)
+			fvmap_patch(GPU_DVFS_TYPE, clk_info->table[i + max].clock, t[i]);
 
-gpex_clock_update_config_data_from_dt();
+	gpex_clock_update_config_data_from_dt();
 
-return count;
+	return count;
 }
 CREATE_SYSFS_DEVICE_WRITE_FUNCTION(set_volt_table)
 
