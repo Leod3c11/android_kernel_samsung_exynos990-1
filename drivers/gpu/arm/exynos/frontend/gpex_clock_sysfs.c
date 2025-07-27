@@ -492,7 +492,7 @@ GPEX_STATIC ssize_t set_asv_table(const char *buf, size_t count)
 	unsigned int rate, volt;
 
 	if (sscanf(buf, "%u %u", &rate, &volt) == 2) {
-		update_fvmap(id, rate, volt);
+// update_fvmap(id, rate, volt); // Removido: função não implementada
 		gpex_clock_update_config_data_from_dt();
 		pr_info("%s: updated DVFS: dvfs_g3d - rate: %u kHz - volt: %u uV\n", __func__, rate, volt);
 		return count;
