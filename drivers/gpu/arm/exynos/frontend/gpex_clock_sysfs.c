@@ -582,18 +582,20 @@ GPEX_STATIC ssize_t set_volt_table(const char *buf, size_t count)
 	int i, tokens;
 	int t[min - max];
 
-	if ((tokens = read_into((int*)&t, min-max, buf, count)) < 0)
-		return -EINVAL;
+	if ((tokens = read_into((int *)&t, min - max, buf, count)) < 0)
+    return -EINVAL;
 
-	if (tokens == 2)
-// fvmap_patch(GPU_DVFS_TYPE, t[0], t[1]); // Removido: função não implementada
-	else
-		for (i = 0; i < tokens; i++)
-// fvmap_patch(GPU_DVFS_TYPE, clk_info->table[i + max].clock, t[i]); // Removido: função não implementada
+if (tokens == 2) {
+    // fvmap_patch(GPU_DVFS_TYPE, t[0], t[1]); // Removido: função não implementada
+} else {
+    for (i = 0; i < tokens; i++) {
+        // fvmap_patch(GPU_DVFS_TYPE, clk_info->table[i + max].clock, t[i]); // Removido: função não implementada
+    }
+}
 
-	gpex_clock_update_config_data_from_dt();
+gpex_clock_update_config_data_from_dt();
 
-	return count;
+return count;
 }
 CREATE_SYSFS_DEVICE_WRITE_FUNCTION(set_volt_table)
 
